@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSOB Transit - Confirm Ticket</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e0f2fe;
+            color: #111827;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .input-field {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            background: linear-gradient(135deg, #1e40af, #FFD700);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2 class="text-2xl font-bold mb-4 text-center">Confirm Your Ticket</h2>
+        <p class="mb-4 text-center">
+            Name: <%= user && user.name ? user.name : 'Unknown User' %><br>
+            <% 
+                const destinationParts = destination.split(' ');
+                const price = destinationParts.pop();
+                const location = destinationParts.join(' ');
+            %>
+            Destination: <%= location || 'Unknown Destination' %><br>
+            Price: <%= price || 'Unknown Price' %>
+        </p>
+        <form id="confirmationForm" action="/confirm-booking" method="POST">
+            <input type="hidden" name="destination" value="<%= destination %>">
+            <div>
+                <label for="phoneNumber" class="block mb-1">MTN Phone Number</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" class="input-field" placeholder="07xxxxxxxx" required>
+            </div>
+            <button type="submit" class="btn w-full mt-4">Book Now</button>
+        </form>
+    </div>
+</body>
+</html>

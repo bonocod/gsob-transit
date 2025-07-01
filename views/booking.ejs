@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GSOB Transit - Safe Learning Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/ScrollTrigger.min.js"></script>
+    <style>
+        :root {
+            --primary-day: #1e40af;
+            --secondary-day: #9333ea;
+            --bg-day: #e0f2fe;
+            --text-day: #111827;
+            --primary-night: #1e293b;
+            --secondary-night: #6b21a8;
+            --bg-night: #1f2937;
+            --text-night: #f9fafb;
+            --gold: #FFD700;
+        }
+
+        .day-mode {
+            --primary: var(--primary-day);
+            --secondary: var(--secondary-day);
+            --bg: var(--bg-day);
+            --text: var(--text-day);
+        }
+
+        .night-mode {
+            --primary: var(--primary-night);
+            --secondary: var(--secondary-night);
+            --bg: var(--bg-night);
+            --text: var(--text-night);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: all 0.5s ease;
+            overflow-x: hidden;
+        }
+
+        .glow {
+            text-shadow: 0 0 10px rgba(30, 64, 175, 0.7), 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .electric-text {
+            font-weight: 900;
+            font-size: 1.15em;
+            background: linear-gradient(90deg, #00f0ff, #ff00d4, #00f0ff);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            animation: electricMove 2s linear infinite;
+        }
+
+        @keyframes electricMove {
+            to { background-position: 200% center; }
+        }
+
+        .ticket-card {
+            transform-style: preserve-3d;
+            transform: perspective(1000px);
+            transition: transform 0.5s ease;
+            opacity: 0;
+        }
+
+        .ticket-card:hover {
+            transform: perspective(1000px) rotateY(10deg) rotateX(5deg) translateY(-10px);
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(30, 64, 175, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(30, 64, 175, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(30, 64, 175, 0); }
+        }
+
+        #earth {
+            position: absolute;
+            top: 50%;
+            right: 10%;
+            width: 300px;
+            height: 300px;
+            z-index: -1;
+        }
+
+        .language-selector {
+            transition: all 0.3s ease;
+        }
+
+        .language-selector:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .ticket-form {
+            background-color: rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(30, 64, 175, 0.5);
+            transform-style: preserve-3d;
+            opacity: 0;
+            transition: transform 0.5s ease, box-shadow 0.3s ease;
+        }
+
+        .day-mode .ticket-form {
+            background-color: rgba(255, 255, 255, 0.5);
+            border-color: rgba(30, 64, 175, 0.7);
+        }
+
+        .ticket-form:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(5deg) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-glow {
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1rem;
+        }
+
+        .day-mode .input-glow {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(30, 64, 175, 0.9);
+            color: #111827;
+        }
+
+        .input-glow:focus {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            border-color: var(--gold);
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--gold));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .form-container {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .book-btn {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--gold));
+        }
+
+        .book-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .book-btn:hover::before {
+            left: 100%;
+        }
+
+        .footer-3d {
+            perspective: 1000px;
+            background: linear-gradient(135deg, var(--primary), var(--gold));
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        .footer-content {
+            transform: rotateX(5deg);
+            transition: transform 0.5s ease, box-shadow 0.3s ease;
+        }
+
+        .footer-content:hover {
+            transform: rotateX(0deg) translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .social-icon {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.2) rotate(360deg);
+            color: var(--bg);
+        }
+
+        .social-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, rgba(30, 64, 175, 0.5), transparent);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .social-icon:hover::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .footer-3d::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.8s;
+        }
+
+        .footer-3d:hover::before {
+            left: 100%;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 800px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .modal-content:hover {
+            transform: perspective(1000px) rotateY(5deg) translateY(-5px);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .developer-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+        }
+
+        .developer-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+
+        #profileIcon {
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e40af, #FFD700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #profileIcon:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+        }
+
+        #profileDropdown {
+            position: absolute;
+            top: 60px;
+            right: 4px;
+            background: linear-gradient(135deg, #1e293b, #6b21a8);
+            color: #f9fafb;
+            border-radius: 8px;
+            padding: 10px;
+            width: 200px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+            transform-origin: top right;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #profileDropdown.show {
+            display: block;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        #profileDropdown.hidden {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body class="day-mode">
+    <!-- 3D Earth Background -->
+    <div id="earth"></div>
+
+    <div class="fixed top-4 right-4 z-50 flex items-center space-x-6">
+        <!-- Language Buttons -->
+        <div class="flex space-x-2">
+            <button onclick="changeLanguage('en')" class="language-selector bg-white/20 px-3 py-1 rounded-full text-sm font-medium hover:bg-white/30">EN</button>
+            <button onclick="changeLanguage('fr')" class="language-selector bg-white/20 px-3 py-1 rounded-full text-sm font-medium hover:bg-white/30">FR</button>
+            <button onclick="changeLanguage('rw')" class="language-selector bg-white/20 px-3 py-1 rounded-full text-sm font-medium hover:bg-white/30">RW</button>
+        </div>
+
+        <!-- Profile Icon -->
+        <div id="profileIcon">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9.963 9.963 0 0112 15c2.21 0 4.246.721 5.879 1.938M15 12a3 3 0 10-6 0 3 3 0 006 0z" />
+            </svg>
+        </div>
+
+        <!-- Profile Dropdown -->
+        <div id="profileDropdown">
+            <div class="mb-2">
+                <p class="font-semibold text-sm" id="profileName"><%= user.name %></p>
+                <p class="text-xs text-gray-200" id="profileEmail"><%= user.email %></p>
+                <p class="text-xs text-gray-300 mt-1" id="profileJoined">Joined: <%= user.joined %></p>
+            </div>
+            <button id="logoutBtn" class="w-full mt-2 py-1.5 text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition" ><a href="/logout">Logout</a></button>
+        </div>
+    </div>
+
+    <!-- Day/Night Toggle -->
+    <div class="fixed top-4 left-4 z-50">
+        <button id="themeToggle" class="p-2 rounded-full bg-white/20 hover:bg-white/30 transition">
+            <i class="fas fa-sun text-yellow-300"></i>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+        <div class="w-full max-w-4xl mx-auto">
+            <!-- Animated Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl md:text-6xl font-bold mb-4 glow" id="mainTitle">GSOB <span class="electric-text">TRANSIT</span></h1>
+                <p class="text-xl opacity-80" id="subTitle">Your Safe learning journey starts here</p>
+            </div>
+            <form id="bookingForm" action="/book-ticket" method="GET" style="display: none;">
+            <input type="hidden" id="destinationInput" name="destination">
+            </form>
+            <!-- 3D Ticket Form -->
+            <div class="form-container">
+                <div class="ticket-form form-3d bg-white/10 rounded-2xl overflow-hidden shadow-2xl p-8 mb-12">
+                    <h2 class="text-2xl font-bold mb-6 text-center glow" id="formTitle">Book Your Learning Ticket</h2>
+                    <div class="progress-bar mb-4"></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium mb-2" id="fullNameLabel">Full Name</label>
+                            <input type="text" id="fullName" value="<%= user.name %>" class="input-glow w-full px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-gold transition" readonly>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" id="emailLabel">Email</label>
+                            <input type="email" id="email" value="<%= user.email %>" class="input-glow w-full px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-gold transition" readonly>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" id="destinationLabel">Destination</label>
+                            <select id="destination" class="input-glow w-full px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-gold transition">
+                                <option value="" id="selectOption">Select your destination</option>
+                                <option value="huye-Kigali 3800RWF">Huye-Kigali 3800RWF</option>
+                                <option value="huye-Musanze 4500RWF">Huye-Musanze 4500RWF</option>
+                                <option value="huye-Rusizi 5000RWF">Huye-Rusizi 5000RWF</option>
+                                <option value="huye-Muhanga 4200RWF">Huye-muhanga 4200RWF</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <button id="bookBtn" class="book-btn w-full py-3 px-6 rounded-lg font-medium text-white hover:scale-105 transition pulse">
+                            <span id="bookText">Book Ticket</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3D Animated Footer -->
+    <footer class="footer-3d py-12">
+        <div class="footer-content max-w-6xl mx-auto px-4 text-white">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 glow">About GSOB Transit</h3>
+                    <p class="opacity-80">GSOB Transit is your gateway to transformative learning experiences. Book your ticket to world-class events and connect with global leaders.</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 glow">Connect</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="social-icon"><i class="fab fa-twitter text-2xl"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram text-2xl"></i></a>
+                        <a href="mailto:info@gsob.com" class="social-icon"><i class="fas fa-envelope text-2xl"></i></a>
+                        <a href="#" class="social-icon" id="teamIcon"><i class="fas fa-users text-2xl"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-8 text-center">
+                <p class="opacity-80">Developed by the GSOB Team • © 2025 GSOB Transit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Developer Modal -->
+    <div id="developerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">×</span>
+            <h2 class="text-2xl font-bold mb-6 text-center glow">Meet the Developers</h2>
+            <div class="developer-card">
+                <img src="https://via.placeholder.com/100?text=Mucyo+Passport" alt="Mucyo Jonathan Passport" class="developer-img">
+                <div>
+                    <h3 class="text-xl font-bold">MFURAYASE MUCYO JONATHAN</h3>
+                    <p class="text-sm opacity-80">Frontend Developer</p>
+                    <p class="mt-2">Mucyo is a passionate 19-year-old frontend developer from Rwanda. With a keen eye for design, he crafted the vibrant and interactive UI of the GSOB Tickets platform, ensuring a seamless user experience. His expertise in HTML, CSS, JavaScript, and frameworks like Tailwind CSS brought the project's vision to life.</p>
+                    <p class="mt-2"><strong>Skills:</strong> HTML5, CSS3, JavaScript, Tailwind CSS, GSAP, Three.js</p>
+                    <p class="mt-2"><strong>Project Contribution:</strong> Designed and implemented the responsive frontend, including animations and 3D effects.</p>
+                </div>
+            </div>
+            <div class="developer-card">
+                <img src="https://via.placeholder.com/100?text=Bonheur+Passport" alt="Bonheur Intwali Passport" class="developer-img">
+                <div>
+                    <h3 class="text-xl font-bold">INTWALI BONHEUR</h3>
+                    <p class="text-sm opacity-80">Backend Developer</p>
+                    <p class="mt-2">Bonheur, an 18-year-old backend prodigy from Rwanda, built the robust server-side infrastructure for GSOB Tickets. His work ensures secure data handling and smooth functionality behind the scenes. He specializes in Node.js, Express, and database management.</p>
+                    <p class="mt-2"><strong>Skills:</strong> Node.js, Express, MongoDB, REST APIs, JavaScript</p>
+                    <p class="mt-2"><strong>Project Contribution:</strong> Developed the backend logic, API endpoints, and data processing for ticket bookings.</p>
+                </div>
+            </div>
+            <p class="text-center opacity-80">Together, Mucyo and Bonheur, two talented teens, combined their skills to create a platform that empowers global learning. Their dedication to innovation and collaboration shines through in this project.</p>
+            <p class="text-center text-sm opacity-60">Note: Images are placeholders. Replace with AI-generated passport photos of confident black teen boys.</p>
+        </div>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="fixed top-1/4 left-10 w-8 h-8 rounded-full bg-blue-400/30 floating" style="animation-delay: 0s;"></div>
+    <div class="fixed top-1/3 right-20 w-6 h-6 rounded-full bg-gold/30 floating" style="animation-delay: 0.5s;"></div>
+    <div class="fixed bottom-1/4 left-1/4 w-10 h-10 rounded-full bg-purple-400/30 floating" style="animation-delay: 1s;"></div>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script>
+        const profileIcon = document.getElementById("profileIcon");
+        const dropdown = document.getElementById("profileDropdown");
+
+        let isOpen = false;
+
+        profileIcon.addEventListener("click", () => {
+            isOpen = !isOpen;
+            if (isOpen) {
+                dropdown.classList.add("show");
+                dropdown.classList.remove("hidden");
+                gsap.fromTo(dropdown, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" });
+            } else {
+                gsap.to(dropdown, {
+                    opacity: 0,
+                    scale: 0.9,
+                    duration: 0.3,
+                    ease: "power2.in",
+                    onComplete: () => dropdown.classList.add("hidden")
+                });
+            }
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!profileIcon.contains(e.target) && !dropdown.contains(e.target)) {
+                if (isOpen) {
+                    isOpen = false;
+                    gsap.to(dropdown, {
+                        opacity: 0,
+                        scale: 0.9,
+                        duration: 0.3,
+                        ease: "power2.in",
+                        onComplete: () => dropdown.classList.add("hidden")
+                    });
+                }
+            }
+        });
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        const translations = {
+            en: {
+                mainTitle: "GSOB Transit",
+                subTitle: "Your Safe learning journey starts here",
+                formTitle: "Book Your Learning Ticket",
+                fullNameLabel: "Full Name",
+                emailLabel: "Email",
+                destinationLabel: "Destination",
+                selectOption: "Select your destination",
+                bookText: "Book Ticket"
+            },
+            fr: {
+                mainTitle: "GSOB Transit",
+                subTitle: "Votre voyage d'apprentissage d'un million de dollars commence ici",
+                formTitle: "Réservez Votre Billet d'Apprentissage",
+                fullNameLabel: "Nom Complet",
+                emailLabel: "Email",
+                destinationLabel: "Destination",
+                selectOption: "Sélectionnez votre destination",
+                bookText: "Réserver le Billet"
+            },
+            rw: {
+                mainTitle: "GSOB Transit",
+                subTitle: "Urugendo rwawe rwo kwiga rw'amadorari miliyoni rutangira hano",
+                formTitle: "Kwemeza Itike Yawe Yo Kwiga",
+                fullNameLabel: "Izina Ryuzuye",
+                emailLabel: "Imeri",
+                destinationLabel: "Aho Ugiye",
+                selectOption: "Hitamo aho ugiye",
+                bookText: "Fata Itike"
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('language') || 'en';
+        let currentTheme = localStorage.getItem('theme') || 'day-mode';
+
+        function initializeState() {
+            const body = document.body;
+            body.classList.remove('day-mode', 'night-mode');
+            body.classList.add(currentTheme);
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.innerHTML = currentTheme === 'day-mode' 
+                ? '<i class="fas fa-sun text-yellow-300"></i>' 
+                : '<i class="fas fa-moon text-blue-300"></i>';
+
+            changeLanguage(currentLanguage);
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            const elements = document.querySelectorAll('[id]');
+            elements.forEach(element => {
+                const key = element.id;
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+            gsap.fromTo('.text-center, .ticket-form, .footer-content', {
+                opacity: 0,
+                y: 20
+            }, {
+                opacity: 1,
+                y: 0,
+                duration: 0.5,
+                ease: 'power2.out',
+                stagger: 0.1
+            });
+        }
+
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            const body = document.body;
+            if (body.classList.contains('day-mode')) {
+                body.classList.remove('day-mode');
+                body.classList.add('night-mode');
+                currentTheme = 'night-mode';
+                themeToggle.innerHTML = '<i class="fas fa-moon text-blue-300"></i>';
+            } else {
+                body.classList.remove('night-mode');
+                body.classList.add('day-mode');
+                currentTheme = 'day-mode';
+                themeToggle.innerHTML = '<i class="fas fa-sun text-yellow-300"></i>';
+            }
+            localStorage.setItem('theme', currentTheme);
+            gsap.fromTo('body', {
+                opacity: 0.5
+            }, {
+                opacity: 1,
+                duration: 0.5,
+                ease: 'power2.out'
+            });
+        });
+
+        let scene, camera, renderer, earth, particles;
+        function initEarth() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(300, 300);
+            document.getElementById('earth').appendChild(renderer.domElement);
+
+            const geometry = new THREE.SphereGeometry(5, 32, 32);
+            const texture = new THREE.TextureLoader().load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg');
+            const material = new THREE.MeshPhongMaterial({
+                map: texture,
+                specular: new THREE.Color('gold'),
+                shininess: 5
+            });
+            earth = new THREE.Mesh(geometry, material);
+            scene.add(earth);
+
+            const particleGeometry = new THREE.BufferGeometry();
+            const particleCount = 500;
+            const posArray = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 15;
+            }
+            particleGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.1,
+                color: 0xFFD700,
+                transparent: true,
+                opacity: 0.6
+            });
+            particles = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particles);
+
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+
+            camera.position.z = 10;
+            animateEarth();
+        }
+
+        function animateEarth() {
+            requestAnimationFrame(animateEarth);
+            earth.rotation.y += 0.005;
+            earth.rotation.x += 0.002;
+            particles.rotation.y += 0.002;
+            renderer.render(scene, camera);
+        }
+
+        if (typeof THREE !== 'undefined') {
+            initEarth();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeState();
+        });
+
+        document.getElementById('bookBtn').addEventListener('click', function() {
+            const destinationSelect = document.getElementById('destination');
+            const destinationValue = destinationSelect.value;
+
+            if (!destinationValue) {
+                alert(translations[currentLanguage]['selectOption']);
+                return;
+            }
+
+            document.getElementById('destinationInput').value = destinationValue;
+            document.getElementById('bookingForm').submit();
+        });
+
+        const modal = document.getElementById('developerModal');
+        const teamIcon = document.getElementById('teamIcon');
+        const closeBtn = document.querySelector('.close-btn');
+
+        function openModal() {
+            if (modal.style.display !== 'block') {
+                modal.style.display = 'block';
+                gsap.from('.modal-content', {
+                    opacity: 0,
+                    scale: 0.8,
+                    duration: 0.5,
+                    ease: 'elastic.out(1, 0.5)'
+                });
+            }
+        }
+
+        function closeModal() {
+            gsap.to('.modal-content', {
+                opacity: 0,
+                scale: 0.8,
+                duration: 0.3,
+                ease: 'power2.in',
+                onComplete: () => modal.style.display = 'none'
+            });
+        }
+
+        teamIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal();
+        });
+
+        closeBtn.addEventListener('click', () => closeModal());
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        gsap.from('#mainTitle', { opacity: 0, y: -50, duration: 1, ease: 'back.out(1.7)' });
+        gsap.from('#subTitle', { opacity: 0, y: 50, duration: 1, delay: 0.3, ease: 'back.out(1.7)' });
+        gsap.from('.form-container', { opacity: 0, scale: 0.8, duration: 1, delay: 0.6, ease: 'elastic.out(1, 0.5)' });
+        gsap.to('.ticket-form', {
+            scrollTrigger: {
+                trigger: '.ticket-form',
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: 'power2.out'
+        });
+        gsap.to('.footer-3d', {
+            scrollTrigger: {
+                trigger: '.footer-3d',
+                start: 'top 80%',
+                toggleActions: 'play none none none'
+            },
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: 'back.out(1.7)'
+        });
+
+        gsap.utils.toArray('.input-glow').forEach(input => {
+            input.addEventListener('focus', () => gsap.to(input, { scale: 1.02, duration: 0.3, ease: 'power2.out' }));
+            input.addEventListener('blur', () => gsap.to(input, { scale: 1, duration: 0.3, ease: 'power2.out' }));
+        });
+    </script>
+</body>
+</html>
