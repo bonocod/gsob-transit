@@ -117,5 +117,6 @@ app.use((req, res) => {
     res.status(404).send('404 page not found');
 });
 
-const PORT = process.env.PORT;
+const PORT = process.env.POR9T||5500;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
