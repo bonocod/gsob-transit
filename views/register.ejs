@@ -3,442 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GSOB Transit - Register for Your Journey</title>
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
-  <style>
-    :root {
-      --primary: #1e40af;
-      --secondary: #9333ea;
-      --bg-day: #e0f2fe;
-      --text-day: #111827;
-      --bg-night: #1e293b;
-      --text-night: #f9fafb;
-      --gold: #FFD700;
-      --warm-gold: #facc15;
-      --warm-amber: #f97316;
-    }
-    .day-mode { --bg: var(--bg-day); --text: var(--text-day); }
-    .night-mode { --bg: var(--bg-night); --text: var(--text-night); }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      transition: all 0.3s ease;
-      overflow-x: hidden;
-    }
-    .glow {
-      text-shadow: 0 0 8px rgba(30, 64, 175, 0.6), 0 0 16px rgba(255, 215, 0, 0.4);
-    }
-    .form-container {
-      perspective: 800px;
-      transform-style: preserve-3d;
-    }
-    .form-3d {
-      transform: rotateX(8deg) rotateY(8deg);
-      transition: transform 0.4s ease;
-      backdrop-filter: blur(8px);
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(30, 64, 175, 0.4);
-    }
-    .form-3d:hover {
-      transform: rotateX(0deg) rotateY(0deg) translateY(-8px);
-    }
-    .input-glow {
-      transition: all 0.3s ease;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 0.8rem 1.2rem;
-      border: 1px solid rgba(30, 64, 175, 0.5);
-      font-size: 0.95rem;
-    }
-    .day-mode .input-glow {
-      background-color: rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(30, 64, 175, 0.8);
-      color: #111827;
-    }
-    .input-glow:focus {
-      box-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
-      border-color: var(--gold);
-    }
-    .register-btn {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(135deg, var(--primary), var(--gold));
-      padding: 0.8rem 1.6rem;
-      border-radius: 0.6rem;
-      font-weight: 600;
-      font-size: 0.95rem;
-    }
-    .register-btn::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: 0.4s;
-    }
-    .register-btn:hover::before {
-      left: 100%;
-    }
-    .login-link {
-      color: var(--warm-gold);
-      font-weight: 500;
-      transition: all 0.3s ease;
-    }
-    .login-link:hover {
-      color: var(--warm-amber);
-      text-decoration: underline;
-    }
-    .floating {
-      animation: floating 2.5s ease-in-out infinite;
-    }
-    @keyframes floating {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-12px); }
-      100% { transform: translateY(0px); }
-    }
-    .pulse {
-      animation: pulse 1.8s infinite;
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.6); }
-      70% { box-shadow: 0 0 0 12px rgba(255, 215, 0, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
-    }
-    #globe {
-      position: absolute;
-      top: 8%;
-      right: 4%;
-      width: 300px;
-      height: 300px;
-      z-index: -1;
-    }
-    .confetti {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background-color: #FFD700;
-      opacity: 0;
-    }
-    .language-selector {
-      transition: all 0.3s ease;
-    }
-    .language-selector:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
-    }
-    .progress-bar {
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary), var(--gold));
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-    .error-message {
-      color: #ef4444;
-      font-size: 0.85rem;
-      margin-top: 0.4rem;
-      display: none;
-      text-align: left;
-    }
-  </style>
-</head>
-<body class="day-mode">
-  <!-- 3D Globe Background -->
-  <div id="globe"></div>
-
-  <!-- Language Selector -->
-  <div class="fixed top-4 right-4 z-50 flex space-x-2">
-    <button onclick="changeLanguage('en')" class="language-selector bg-white/20 px-2.5 py-1 rounded-full text-sm font-medium hover:bg-white/30">EN</button>
-    <button onclick="changeLanguage('fr')" class="language-selector bg-white/20 px-2.5 py-1 rounded-full text-sm font-medium hover:bg-white/30">FR</button>
-    <button onclick="changeLanguage('rw')" class="language-selector bg-white/20 px-2.5 py-1 rounded-full text-sm font-medium hover:bg-white/30">RW</button>
-  </div>
-
-  <!-- Day/Night Toggle -->
-  <div class="fixed top-4 left-4 z-50">
-    <button id="themeToggle" class="p-2 rounded-full bg-white/20 hover:bg-white/30 transition">
-      <i class="fas fa-sun text-yellow-300"></i>
-    </button>
-  </div>
-
-  <!-- Main Content -->
-  <div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
-    <div class="w-full max-w-5xl mx-auto text-center">
-      <!-- Hero Section -->
-      <div class="mb-10">
-        <h1 class="text-4xl md:text-6xl font-bold mb-3 glow" id="heroTitle">Welcome To <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-blue-600">GSOB Transit</span></h1>
-        <p class="text-lg opacity-80 mb-6" id="heroSubtitle">Register now to book your bus tickets and travel home with ease.</p>
-      </div>
-
-      <!-- Registration Form -->
-      <div class="form-container">
-        <form action="/api/auth/register" method="POST" class="form-3d rounded-xl p-6 shadow-xl max-w-md mx-auto">
-          <h2 class="text-2xl font-bold mb-5 glow" id="formTitle">Join GSOB Transit</h2>
-          <div class="progress-bar mb-3"></div>
-          <% if (error) { %>
-            <div class="error-message" style="display: block;"><%= error %></div>
-          <% } %>
-          <div class="space-y-5">
-            <div>
-              <label class="block text-sm font-medium mb-1" id="nameLabel">Full Name</label>
-              <input type="text" name="name" id="name" class="input-glow w-full rounded-md" placeholder="Enter your full name" required />
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-1" id="emailLabel">Email</label>
-              <input type="email" name="email" id="email" class="input-glow w-full rounded-md" placeholder="Enter your email" required />
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-1" id="passwordLabel">Password</label>
-              <input type="password" name="password" id="password" class="input-glow w-full rounded-md" placeholder="Create a password" required />
-            </div>
-            <div>
-              <button type="submit" class="register-btn w-full py-2.5 rounded-md font-medium text-white hover:scale-105 transition pulse">
-                <span id="registerText">Register Now</span>
-              </button>
-            </div>
-            <div class="text-center text-sm">
-              <span class="opacity-80" id="loginPrompt">Already have an account?</span>
-              <a href="/login" class="login-link ml-1" id="loginLink">Log In</a>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <!-- Features Section -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mt-10">
-        <div class="bg-white/5 p-5 rounded-lg hover:bg-white/10 transition transform hover:-translate-y-1">
-          <div class="w-10 h-10 bg-blue-500/20 rounded-md flex items-center justify-center mb-3">
-            <i class="fas fa-bus text-blue-400 text-lg"></i>
-          </div>
-          <h3 class="text-lg font-bold mb-2" id="feature1Title">Easy Ticket Booking</h3>
-          <p class="opacity-80 text-sm" id="feature1Desc">Book your bus tickets from anywhere during holidays.</p>
-        </div>
-        <div class="bg-white/5 p-5 rounded-lg hover:bg-white/10 transition transform hover:-translate-y-1">
-          <div class="w-10 h-10 bg-blue-500/20 rounded-md flex items-center justify-center mb-3">
-            <i class="fas fa-shield-alt text-blue-400 text-lg"></i>
-          </div>
-          <h3 class="text-lg font-bold mb-2" id="feature2Title">Safe Journeys</h3>
-          <p class="opacity-80 text-sm" id="feature2Desc">Travel home securely with trusted transport agencies.</p>
-        </div>
-        <div class="bg-white/5 p-5 rounded-lg hover:bg-white/10 transition transform hover:-translate-y-1">
-          <div class="w-10 h-10 bg-blue-500/20 rounded-md flex items-center justify-center mb-3">
-            <i class="fas fa-user-check text-blue-400 text-lg"></i>
-          </div>
-          <h3 class="text-lg font-bold mb-2" id="feature3Title">Admin Support</h3>
-          <p class="opacity-80 text-sm" id="feature3Desc">Admins organize buses based on your bookings.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Floating Elements -->
-  <div class="fixed top-1/4 left-8 w-6 h-6 rounded-full bg-blue-400/30 floating" style="animation-delay: 0s;"></div>
-  <div class="fixed top-1/3 right-16 w-5 h-5 rounded-full bg-gold/30 floating" style="animation-delay: 0.4s;"></div>
-  <div class="fixed bottom-1/4 left-1/4 w-7 h-7 rounded-full bg-purple-400/30 floating" style="animation-delay: 0.8s;"></div>
-
   <script>
-    // Language translations
-    const translations = {
-      en: {
-        heroTitle: "Welcome To GSOB Transit",
-        heroSubtitle: "Register now to book your bus tickets and travel home with ease.",
-        formTitle: "Join GSOB Transit",
-        nameLabel: "Full Name",
-        emailLabel: "Email",
-        passwordLabel: "Password",
-        registerText: "Register Now",
-        loginPrompt: "Already have an account?",
-        loginLink: "Log In",
-        feature1Title: "Easy Ticket Booking",
-        feature1Desc: "Book your bus tickets from anywhere during holidays.",
-        feature2Title: "Safe Journeys",
-        feature2Desc: "Travel home securely with trusted transport agencies.",
-        feature3Title: "Admin Support",
-        feature3Desc: "Admins organize buses based on your bookings."
-      },
-      fr: {
-        heroTitle: "Bienvenue à GSOB Transit",
-        heroSubtitle: "Inscrivez-vous pour réserver vos billets de bus et voyager facilement.",
-        formTitle: "Rejoignez GSOB Transit",
-        nameLabel: "Nom Complet",
-        emailLabel: "Email",
-        passwordLabel: "Mot de Passe",
-        registerText: "S'Inscrire Maintenant",
-        loginPrompt: "Vous avez déjà un compte ?",
-        loginLink: "Se Connecter",
-        feature1Title: "Réservation Facile",
-        feature1Desc: "Réservez vos billets de bus depuis n'importe où pendant les vacances.",
-        feature2Title: "Voyages Sûrs",
-        feature2Desc: "Voyagez en toute sécurité avec des agences de transport fiables.",
-        feature3Title: "Support Admin",
-        feature3Desc: "Les administrateurs organisent les bus selon vos réservations."
-      },
-      rw: {
-        heroTitle: "Murakaza Neza mu Ngendo za GSOB",
-        heroSubtitle: "Iyandikishe nonaha kugira ngo ushyire amatike y'ubus kandi ugende mu rugo byoroshye.",
-        formTitle: "Injira mu GSOB Transit",
-        nameLabel: "Izina Ryuzuye",
-        emailLabel: "Imeri",
-        passwordLabel: "Ijambobanga",
-        registerText: "Iyandikishe Nonaha",
-        loginPrompt: "Waba uzi konti?",
-        loginLink: "Injira",
-        feature1Title: "Kushyira Amatike Byoroshye",
-        feature1Desc: "Shyira amatike y'ubus uko waba uri hose mu biruhuko.",
-        feature2Title: "Urugendo Rutekanye",
-        feature2Desc: "Genda mu rugo utekanye hamwe n'ibigo by'ubus byizewe.",
-        feature3Title: "Ubufasha bwa Admin",
-        feature3Desc: "Abayobozi bashyiraho busi bitewe n'ayandi yashyiriweho."
-      }
-    };
-
-    // Current language
-    let currentLanguage = 'en';
-
-    // Change language function
-    function changeLanguage(lang) {
-      currentLanguage = lang;
-      const elements = document.querySelectorAll('[id]');
-      elements.forEach(element => {
-        const key = element.id;
-        if (translations[lang][key]) {
-          element.textContent = translations[lang][key];
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#2563EB' }
         }
-      });
-    }
-
-    // Theme toggle
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    themeToggle.addEventListener('click', () => {
-      if (body.classList.contains('day-mode')) {
-        body.classList.remove('day-mode');
-        body.classList.add('night-mode');
-        themeToggle.innerHTML = '<i class="fas fa-moon text-blue-300"></i>';
-      } else {
-        body.classList.remove('night-mode');
-        body.classList.add('day-mode');
-        themeToggle.innerHTML = '<i class="fas fa-sun text-yellow-300"></i>';
-      }
-    });
-
-    // 3D Globe with Particle System
-    let scene, camera, renderer, globe, particles;
-    function initGlobe() {
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-      renderer = new THREE.WebGLRenderer({ alpha: true });
-      renderer.setSize(300, 300);
-      document.getElementById('globe').appendChild(renderer.domElement);
-
-      // Globe (solid color)
-      const geometry = new THREE.SphereGeometry(4, 32, 32);
-      const material = new THREE.MeshPhongMaterial({
-        color: 0x1e40af,
-        specular: new THREE.Color('gold'),
-        shininess: 8
-      });
-      globe = new THREE.Mesh(geometry, material);
-      scene.add(globe);
-
-      // Particle System
-      const particleGeometry = new THREE.BufferGeometry();
-      const particleCount = 400;
-      const posArray = new Float32Array(particleCount * 3);
-      for (let i = 0; i < particleCount * 3; i++) {
-        posArray[i] = (Math.random() - 0.5) * 15;
-      }
-      particleGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-      const particleMaterial = new THREE.PointsMaterial({
-        size: 0.08,
-        color: 0xFFD700,
-        transparent: true,
-        opacity: 0.5
-      });
-      particles = new THREE.Points(particleGeometry, particleMaterial);
-      scene.add(particles);
-
-      const ambientLight = new THREE.AmbientLight(0x404040);
-      scene.add(ambientLight);
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-      directionalLight.position.set(1, 1, 1);
-      scene.add(directionalLight);
-
-      camera.position.z = 10;
-      function animateGlobe() {
-        requestAnimationFrame(animateGlobe);
-        globe.rotation.y += 0.004;
-        globe.rotation.x += 0.001;
-        particles.rotation.y += 0.001;
-        renderer.render(scene, camera);
-      }
-      animateGlobe();
-    }
-
-    if (typeof THREE !== 'undefined') {
-      initGlobe();
-    }
-
-    // Progress Bar
-    const inputs = document.querySelectorAll('.input-glow');
-    const progressBar = document.querySelector('.progress-bar');
-    inputs.forEach(input => {
-      input.addEventListener('input', () => {
-        const filled = Array.from(inputs).filter(i => i.value.trim() !== '').length;
-        progressBar.style.width = `${(filled / inputs.length) * 100}%`;
-      });
-    });
-
-    // Confetti effect
-    function createConfetti() {
-      const colors = ['#FFD700', '#1e40af', '#9333ea', '#FF5722', '#4CAF50'];
-      for (let i = 0; i < 100; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.top = '-10px';
-        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-        document.body.appendChild(confetti);
-        const animationDuration = Math.random() * 2 + 1.5;
-        gsap.to(confetti, {
-          y: window.innerHeight + 10,
-          x: (Math.random() - 0.5) * 150,
-          opacity: 1,
-          duration: animationDuration,
-          ease: 'power1.out',
-          onComplete: () => confetti.remove()
-        });
-        gsap.to(confetti, { rotation: Math.random() * 360, duration: animationDuration });
       }
     }
-
-    // Check for success query param
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success') === 'true') {
-      createConfetti();
-      gsap.to('.form-3d', { opacity: 0, scale: 0.9, duration: 0.4, ease: 'power2.in' });
-    }
-
-    // Animations
-    gsap.from('#heroTitle', { opacity: 0, y: -40, duration: 0.6, ease: 'back.out(1.5)' });
-    gsap.from('#heroSubtitle', { opacity: 0, y: 40, duration: 0.6, delay: 0.2, ease: 'back.out(1.5)' });
-    gsap.from('.form-container', { opacity: 0, scale: 0.9, duration: 0.6, delay: 0.4, ease: 'elastic.out(1, 0.6)' });
-    gsap.from('.text-center.text-sm', { opacity: 0, y: 15, duration: 0.6, delay: 0.6, ease: 'power2.out' });
-    gsap.utils.toArray('.bg-white\\/5').forEach(element => {
-      gsap.from(element, {
-        scrollTrigger: { trigger: element, start: "top 85%", toggleActions: "play none none none" },
-        opacity: 0, y: 40, duration: 0.5, ease: 'power2.out'
-      });
-    });
-    gsap.utils.toArray('.input-glow').forEach(input => {
-      input.addEventListener('focus', () => gsap.to(input, { scale: 1.015, duration: 0.2, ease: 'power2.out' }));
-      input.addEventListener('blur', () => gsap.to(input, { scale: 1, duration: 0.2, ease: 'power2.out' }));
-    });
   </script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <title>Register - GSOB Transit</title>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen">
+  <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold text-center mb-6">Create an Account</h2>
+    <% if (errorMessage) { %>
+      <div role="alert" class="bg-red-100 text-red-800 px-4 py-2 mb-4 rounded">
+        <%= errorMessage %>
+      </div>
+    <% } %>
+    <form action="/auth/register" method="POST" class="space-y-4">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+        <input type="text" name="name" id="name" autocomplete="name" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+      </div>
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
+        <input type="email" name="email" id="email" autocomplete="email" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+        <input type="password" name="password" id="password" autocomplete="new-password" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+      </div>
+      <div>
+        <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+        <input type="password" name="confirmPassword" id="confirmPassword" autocomplete="new-password" required
+               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+      </div>
+      <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors duration-200">Sign Up</button>
+    </form>
+    <p class="mt-4 text-center text-sm text-gray-600">
+      Already have an account?
+      <a href="/auth/login" class="text-primary hover:underline">Log in</a>
+    </p>
+  </div>
 </body>
 </html>
-

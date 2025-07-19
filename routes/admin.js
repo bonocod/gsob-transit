@@ -1,24 +1,28 @@
 const express = require('express');
 const router = express.Router();
-
 const Student = require('../models/Student');
 const Booking = require('../models/Booking');
 const Destination = require('../models/Destination');
+const { Parser } = require('json2csv');
 
-router.get('/dashboard',   (req, res) => {
-  res.render('admin', { user: req.user });
+router.get('/dashboard', (req, res) => {
+  res.render('admin', { user: req.session.user });
 });
-
 
 router.get('/summary', async (req, res) => {
   try {
-    // Per-promotion + destination
     const summary = await Student.aggregate([
       {
         $lookup: {
           from: "bookings",
-          localField: "_id",
-          foreignField: "user",
+          let: { studentId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: [ { $toString: "$user" }, "$$studentId" ] }
+              }
+            }
+          ],
           as: "bookings"
         }
       },
@@ -46,13 +50,18 @@ router.get('/summary', async (req, res) => {
       { $sort: { promotion: 1, destination: 1 } }
     ]);
 
-    // Per-destination (all promotions)
     const overallPerDestination = await Student.aggregate([
       {
         $lookup: {
           from: "bookings",
-          localField: "_id",
-          foreignField: "user",
+          let: { studentId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: [ { $toString: "$user" }, "$$studentId" ] }
+              }
+            }
+          ],
           as: "bookings"
         }
       },
@@ -77,21 +86,26 @@ router.get('/summary', async (req, res) => {
       { $sort: { destination: 1 } }
     ]);
 
-    // Get individual paid students
     const paidStudents = await Booking.aggregate([
       { $match: { status: 'paid' } },
       {
         $lookup: {
           from: 'students',
-          localField: 'user',
-          foreignField: '_id',
+          let: { userId: { $toString: "$user" } },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: ["$_id", "$$userId"] }
+              }
+            }
+          ],
           as: 'student'
         }
       },
       { $unwind: '$student' },
       {
         $project: {
-          fullName: "$student.fullName",
+          fullName: "$student.name",
           promotion: "$student.promotion",
           class: "$student.class",
           destination: "$destination",
@@ -109,26 +123,17 @@ router.get('/summary', async (req, res) => {
       destinationSummary,
       paidStudents
     });
-
   } catch (error) {
     console.error('Aggregation error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// --- Step 1: Route File to Handle Promotion and Class-Level Student Management ---
-
-
-
-
-// Route to show available classes/combinations for a given promotion
 router.get('/manage/:promotion', async (req, res) => {
   try {
     const promotion = req.params.promotion.toUpperCase();
     const isO = ['S1','S2','S3'].includes(promotion);
     const field = isO ? 'class' : 'combination';
-
-    // get distinct values (A–D or ANP, etc.)
     const items = await Student.distinct(field, { promotion });
     res.render('manage-classes', { promotion, items });
   } catch (err) {
@@ -137,43 +142,53 @@ router.get('/manage/:promotion', async (req, res) => {
   }
 });
 
-// ———————————————————————————————————————————————
-// 3) Show student list for that class/combination
 router.get('/manage/:promotion/:item', async (req, res) => {
   try {
     const promotion = req.params.promotion.toUpperCase();
-    const item = req.params.item; // class or combination
-
-    // fetch all students in that group
+    const item = req.params.item;
     const students = await Student.aggregate([
-      { $match: {
+      {
+        $match: {
           promotion,
           $or: [
             { class: item },
             { combination: item }
           ]
-      }},
-      { $lookup: {
+        }
+      },
+      {
+        $lookup: {
           from: 'bookings',
-          localField: '_id',
-          foreignField: 'user',
+          let: { studentId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: [ { $toString: "$user" }, "$$studentId" ] }
+              }
+            }
+          ],
           as: 'bookings'
-      }},
-      { $addFields: {
+        }
+      },
+      {
+        $addFields: {
           paid: { $gt: [{ $size: '$bookings' }, 0] },
           destination: { $arrayElemAt: ['$bookings.destination', 0] },
           bookedAt: { $arrayElemAt: ['$bookings.bookedAt', 0] }
-      }},
-      { $project: {
+        }
+      },
+      {
+        $project: {
           name: '$name',
           paid: 1,
           destination: 1,
           bookedAt: 1
-      }}
+        }
+      }
     ]);
 
-    const total    = students.length;
-    const paidCount   = students.filter(s => s.paid).length;
+    const total = students.length;
+    const paidCount = students.filter(s => s.paid).length;
     const unpaidCount = total - paidCount;
 
     res.render('class-student-list', {
@@ -190,46 +205,45 @@ router.get('/manage/:promotion/:item', async (req, res) => {
   }
 });
 
-const { Parser } = require('json2csv');
-
 router.get('/export/summary', async (req, res) => {
   try {
-    
     const summary = await Student.aggregate([
-  {
-    $lookup: {
-      from: "bookings",
-      localField: "_id",
-      foreignField: "user",
-      as: "booking"
-    }
-  },
-  {
-    $unwind: "$booking"
-  },
-  {
-    $group: {
-      _id: {
-        promotion: "$promotion",
-        destination: "$booking.destination"
+      {
+        $lookup: {
+          from: "bookings",
+          let: { studentId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: { $eq: [ { $toString: "$user" }, "$$studentId" ] }
+              }
+            }
+          ],
+          as: "booking"
+        }
       },
-      studentsSet: { $addToSet: "$_id" }, // unique students
-      totalPaid: { $sum: "$booking.amountPaid" }
-    }
-  },
-  {
-    $project: {
-      promotion: "$_id.promotion",
-      destination: "$_id.destination",
-      numberOfStudents: { $size: "$studentsSet" },
-      totalPaid: 1,
-      _id: 0
-    }
-  },
-  {
-    $sort: { promotion: 1, destination: 1 }
-  }
-]);
+      { $unwind: "$booking" },
+      {
+        $group: {
+          _id: {
+            promotion: "$promotion",
+            destination: "$booking.destination"
+          },
+          studentsSet: { $addToSet: "$_id" },
+          totalPaid: { $sum: "$booking.amountPaid" }
+        }
+      },
+      {
+        $project: {
+          promotion: "$_id.promotion",
+          destination: "$_id.destination",
+          numberOfStudents: { $size: "$studentsSet" },
+          totalPaid: 1,
+          _id: 0
+        }
+      },
+      { $sort: { promotion: 1, destination: 1 } }
+    ]);
 
     const parser = new Parser();
     const csv = parser.parse(summary);
@@ -243,6 +257,19 @@ router.get('/export/summary', async (req, res) => {
   }
 });
 
+router.get('/bookings', async (req, res) => {
+  const bookings = await Booking.find({}).populate('user', 'name email');
+  res.render('admin-bookings', { bookings, csrfToken: req.csrfToken() });
+});
 
+router.post('/bookings/:id/paid', async (req, res) => {
+  try {
+    await Booking.findByIdAndUpdate(req.params.id, { status: 'paid' });
+    res.redirect('/admin/bookings');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error updating booking');
+  }
+});
 
 module.exports = router;

@@ -1,6 +1,5 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 // Register Student
 exports.register = async (req, res) => {
@@ -8,7 +7,9 @@ exports.register = async (req, res) => {
 
   try {
     const existing = await User.findOne({ email });
-    if (existing) return res.render('register', { error: 'User already exists' });
+    if (existing) {
+      return res.render('register', { error: 'User already exists' });
+    }
 
     if (!name || !email || !password) {
       return res.render('register', { error: 'All fields are required' });
@@ -23,8 +24,10 @@ exports.register = async (req, res) => {
     });
 
     await user.save();
+    // Optionally create a corresponding Student document here if desired
     res.redirect('/login'); // Trigger confetti
   } catch (err) {
+    console.error('Registration failed:', err);
     res.render('register', { error: 'Registration failed' });
   }
 };
@@ -44,19 +47,29 @@ exports.login = async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
     if (!match) return res.render('login', { error: 'Invalid credentials' });
 
-    const token = jwt.sign(
-      { id: user._id, role: user.role, name: user.name },
-      process.env.JWT_SECRET,
-      { expiresIn: '2h' }
-    );
+    // Set session user data instead of JWT
+    req.session.user = {
+      id: user._id,
+      role: user.role,
+      name: user.name,
+      email: user.email
+    };
 
-    res.cookie('token', token, { httpOnly: true });
     if (user.role === 'admin') {
       res.redirect('/admin/dashboard');
     } else {
       res.redirect('/booking');
     }
   } catch (err) {
+    console.error('Login failed:', err);
     res.render('login', { error: 'Login failed' });
   }
+};
+
+exports.logout = (req, res, next) => {
+  req.session.destroy(err => {
+    if (err) return next(err);
+    res.clearCookie('connect.sid');
+    res.redirect('/auth/login');
+  });
 };

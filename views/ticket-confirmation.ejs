@@ -45,25 +45,21 @@
 </head>
 <body>
     <div class="card">
-        <h2 class="text-2xl font-bold mb-4 text-center">Confirm Your Ticket</h2>
-        <p class="mb-4 text-center">
-            Name: <%= user && user.name ? user.name : 'Unknown User' %><br>
-            <% 
-                const destinationParts = destination.split(' ');
-                const price = destinationParts.pop();
-                const location = destinationParts.join(' ');
-            %>
-            Destination: <%= location || 'Unknown Destination' %><br>
-            Price: <%= price || 'Unknown Price' %>
-        </p>
-        <form id="confirmationForm" action="/confirm-booking" method="POST">
-            <input type="hidden" name="destination" value="<%= destination %>">
-            <div>
-                <label for="phoneNumber" class="block mb-1">MTN Phone Number</label>
-                <input type="tel" id="phoneNumber" name="phoneNumber" class="input-field" placeholder="07xxxxxxxx" required>
-            </div>
-            <button type="submit" class="btn w-full mt-4">Book Now</button>
-        </form>
-    </div>
+    <h2 class="text-2xl font-bold mb-4 text-center">Confirm Your Ticket</h2>
+    <p class="mb-4 text-center">
+        Name: <%= user && user.name ? user.name : 'Unknown User' %><br>
+        Destination: <%= destination || 'Unknown Destination' %><br>
+        Price: <%= price ? price + ' RWF' : 'Unknown Price' %>
+    </p>
+    <form id="confirmationForm" action="/confirm-booking" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="destination" value="<%= destination %>">
+        <div>
+            <label for="phoneNumber" class="block mb-1">MTN Phone Number</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" class="input-field" placeholder="07xxxxxxxx" required>
+        </div>
+        <button type="submit" class="btn w-full mt-4">Book Now</button>
+    </form>
+</div>
 </body>
 </html>

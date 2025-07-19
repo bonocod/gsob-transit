@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GSOB Transit - Ticket Success</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -49,14 +48,21 @@
         <h1 class="success-message">Booking Successful!</h1>
         <p class="mb-4">Thank you, <strong><%= fullName || 'User' %></strong>, for booking your ticket.</p>
         <% 
-            const destinationParts = destination.split(' ');
-            const price = destinationParts.pop();
-            const location = destinationParts.join(' ');
+            // Split the destination to separate location and price
+            const destParts = destination ? destination.split(' ') : [];
+            const pricePart = destParts.pop();
+            const locationPart = destParts.join(' ');
         %>
-        <p class="mb-2">Destination: <strong><%= location || 'Unknown' %></strong></p>
-        <p class="mb-2">Price: <strong><%= price || 'Unknown' %></strong></p>
+        <p class="mb-2">Destination: <strong><%= locationPart || 'Unknown' %></strong></p>
+        <p class="mb-2">Price: <strong><%= pricePart || 'Unknown' %></strong></p>
         <p class="mb-4">MTN Phone Number: <strong><%= phoneNumber || 'Not Provided' %></strong></p>
-        <p class="text-sm text-gray-600">Booked on: Thursday, May 29, 2025, 11:35 AM CAT</p>
+        <p class="text-sm text-gray-600">
+            Booked on: <strong>
+            <%= new Date().toLocaleString('en-US', {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+                    hour: 'numeric', minute: 'numeric', hour12: true, timeZone: 'Africa/Kigali'
+                }) %> CAT</strong>
+        </p>
         <a href="/" class="btn mt-4 inline-block">Back to Home</a>
     </div>
 </body>

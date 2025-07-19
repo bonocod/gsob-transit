@@ -1,18 +1,11 @@
-const jwt = require('jsonwebtoken');
-
+// middleware/auth.js
 module.exports = (req, res, next) => {
-  const token = req.cookies.token || req.header('Authorization')?.split(' ')[1];
-
-  if (!token) {
-    return res.redirect('/login');
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // contains { id, role }
+  if (req.session && req.session.user) {
+    req.user = req.session.user;
     next();
-  } catch (err) {
+  } else {
     res.redirect('/login');
   }
 };
+
 

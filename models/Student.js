@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const studentSchema = new mongoose.Schema({
-  _id: String,         // user ID like "user0001"
+  _id: String,
   name: String,
-  promotion: String,
-  class: String,
-  combination: { type: String, default: null },
+  promotion: { type: String, index: true },
+  class: { type: String, index: true },
+  combination: { type: String, default: null, index: true },
   email: String,
 });
 

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Unpaid Students - GSOB Transit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto mt-5 px-4">
+    <h2 class="text-2xl font-bold mb-4">Unpaid Students</h2>
+    <form method="GET" action="/unpaid-students/unpaid" class="mb-4 flex flex-wrap gap-4">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div>
+        <label class="block text-sm font-medium">Promotion</label>
+        <select name="promotion" class="border rounded px-3 py-2">
+          <option value="">All</option>
+          <% ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'].forEach(promo => { %>
+            <option value="<%= promo %>" <%= filters.promotion === promo ? 'selected' : '' %>><%= promo %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Class</label>
+        <input type="text" name="className" value="<%= filters.className || '' %>" class="border rounded px-3 py-2">
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Combination</label>
+        <input type="text" name="combination" value="<%= filters.combination || '' %>" class="border rounded px-3 py-2">
+      </div>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Filter</button>
+    </form>
+    <table class="table-auto w-full border-collapse bg-white shadow-md rounded-lg">
+      <thead class="bg-gray-800 text-white">
+        <tr>
+          <th class="px-4 py-2">Name</th>
+          <th class="px-4 py-2">Promotion</th>
+          <th class="px-4 py-2">Class</th>
+          <th class="px-4 py-2">Combination</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% unpaidStudents.forEach(student => { %>
+          <tr class="border-b">
+            <td class="px-4 py-2"><%= student.name %></td>
+            <td class="px-4 py-2"><%= student.promotion %></td>
+            <td class="px-4 py-2"><%= student.class || '—' %></td>
+            <td class="px-4 py-2"><%= student.combination || '—' %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    <a href="/admin/summary" class="inline-block mt-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition">Back to Summary</a>
+  </div>
+</body>
+</html>

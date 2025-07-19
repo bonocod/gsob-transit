@@ -8,7 +8,7 @@ const createAdmin = async () => {
   await mongoose.connect(process.env.MONGO_URI);
 
   const password = 'umuntu'; // set your admin password here
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 12);
 
   const admin = new User({
     name: 'yego sha',
