@@ -1,27 +1,28 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const Booking = require('./models/Booking');
-const mongoose = require('mongoose');
+const logger = require('./config/logger');
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.log(err));
-
-async function cleanBookings() {
+const cleanBookings = async () => {
   try {
+    await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
     const result = await Booking.deleteMany({
       $or: [
         { destination: { $exists: false } },
         { destination: null },
-        { destination: "" }
+        { destination: '' }
       ]
     });
-
-    console.log(`Deleted ${result.deletedCount} bookings without a destination.`);
-  } catch (error) {
-    console.error("Error cleaning bookings:", error);
+    logger.info(`Deleted ${result.deletedCount} invalid bookings`);
+  } catch (err) {
+    logger.error('Error cleaning bookings', { error: err.message });
+    throw err;
   } finally {
-    mongoose.connection.close();
+    await mongoose.connection.close();
   }
-}
+};
 
 cleanBookings();

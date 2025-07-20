@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Tailwind CSS CDN -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSOB Transit - Error</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -14,12 +14,11 @@
       }
     }
   </script>
-  <title>Error - GSOB Transit</title>
 </head>
 <body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
   <div class="text-center">
-    <h1 class="text-6xl font-bold text-gray-900 mb-4"><%= error && error.status ? error.status : 500 %></h1>
-    <p class="text-2xl text-gray-700 mb-6"><%= error && error.message ? error.message : 'Something went wrong' %></p>
+    <h1 class="text-6xl font-bold text-gray-900 mb-4"><%= (typeof error !== 'undefined' && error && error.status) ? error.status : 500 %></h1>
+    <p class="text-2xl text-gray-700 mb-6"><%= (typeof error !== 'undefined' && error && error.message) ? error.message : 'Something went wrong' %></p>
     <a href="/" class="inline-block bg-primary text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors duration-200">Go to Homepage</a>
   </div>
 </body>

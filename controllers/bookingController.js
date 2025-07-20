@@ -1,38 +1,76 @@
 const Booking = require('../models/Booking');
-const destinations = require('../config/destinationPrices');
+const Destination = require('../models/Destination');
+const Student = require('../models/Student');
+const logger = require('../config/logger');
 
-exports.showForm = async (req, res) => {
-    if (!req.session.user) {
-        return res.redirect('/auth/login');
+exports.getBooking = async (req, res) => {
+  try {
+    const destinations = await Destination.find();
+    let studentData = {};
+    if (req.session.user && req.session.user.id) {
+      const student = await Student.findOne({ user: req.session.user.id });
+      if (student) {
+        studentData = {
+          name: student.name,
+          promotion: student.promotion,
+          class: student.class,
+          combination: student.combination
+        };
+      } else {
+        logger.warn('No student record found for user', { userId: req.session.user.id });
+      }
+    } else {
+      logger.warn('No user session found');
     }
-    const existingBooking = await Booking.findOne({ user: req.session.user.id });
-    if (existingBooking) {
-        return res.render('booked-user', { user, destinations: await Destination.find(), message: 'You have already booked a ticket.' });
-    }
-    res.render('booking', { user:req.session.user,destinations ,errorMessage:null });
+    res.render('booking', {
+      csrfToken: req.csrfToken(),
+      destinations,
+      user: req.session.user || {},
+      student: studentData,
+      errorMessage: null
+    });
+  } catch (err) {
+    logger.error('Error fetching booking page', { error: err.message });
+    res.render('booking', {
+      errorMessage: 'Failed to load booking page',
+      csrfToken: req.csrfToken(),
+      destinations: [],
+      user: req.session.user || {},
+      student: {}
+    });
+  }
 };
 
-exports.create = async (req, res, next) => {
-    try {
-        if (!req.session.user) {
-            return res.redirect('/auth/login');
-        }
-        const { destination, date, phone } = req.body;
-        const selected = destinations.find(d => d.name === destination);
-        if (!selected) {
-            return res.status(400).render('error', { message: 'Invalid destination selected.' });
-        }
-        const price = selected.price;
-        const booking = new Booking({
-            user: req.session.user.id,
-            destination,
-            price,
-            date,
-            phone
-        });
-        await booking.save();
-        res.redirect('/');
-    } catch (err) {
-        next(err);
+exports.createBooking = async (req, res) => {
+  const { destination, date, phoneNumber } = req.body;
+  const userId = req.session.user.id;
+
+  try {
+    // Check booking limit (max 1)
+    const existingBookings = await Booking.countDocuments({ user: userId });
+    if (existingBookings >= 1) {
+      logger.warn('Booking limit reached', { userId });
+      return res.redirect('/ticket-failure?message=You have already booked a ticket.');
     }
+
+    // Validate inputs
+    if (!destination || !date || !phoneNumber) {
+      throw new Error('All fields are required');
+    }
+
+    const booking = new Booking({
+      user: userId,
+      destination,
+      phoneNumber,
+      date,
+      status: 'pending'
+    });
+    await booking.save();
+
+    logger.info('Booking created', { userId, destination, date, phoneNumber });
+    res.redirect('/ticket-success');
+  } catch (err) {
+    logger.error('Error creating booking', { error: err.message, userId });
+    res.redirect(`/ticket-failure?message=${encodeURIComponent(err.message || 'Failed to create booking')}`);
+  }
 };

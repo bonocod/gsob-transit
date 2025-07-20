@@ -1,119 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>GSOB Transit - Book Ticket</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSOB Transit - Book Ticket</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#2563EB' }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 </head>
-<body class="day-mode">
-    <!-- Top Navigation -->
-    <header aria-label="Main Navigation">
-        <div class="flex items-center space-x-2">
-            <button onclick="changeLanguage('en')" class="language-selector bg-white/20 px-2.5 py-1 rounded-full text-sm font-medium hover:bg-white/30">EN</button>
-            <button onclick="changeLanguage('fr')" class="language-selector bg-white/20 px-2.5 py-1 rounded-full text-sm font-medium hover:bg-white/30">FR</button>
-            <button onclick="changeLanguage('rw')" class="language-selector bg-white/20 px-2.5 py-1 rounded-full text-sm font-medium hover:bg-white/30">RW</button>
+<body class="bg-gray-100">
+  <div class="container mx-auto mt-10 px-4">
+    <h2 class="text-2xl font-bold mb-6">Book Your Ticket</h2>
+    <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+      <div role="alert" class="bg-red-100 text-red-800 px-4 py-2 mb-4 rounded">
+        <%= errorMessage %>
+      </div>
+    <% } %>
+    <form action="/booking" method="POST" aria-label="Booking Form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="mb-4">
+        <label for="name" class="block text-sm font-medium mb-2">Name</label>
+        <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" value="<%= student && student.name ? student.name : '' %>" readonly aria-readonly="true">
+      </div>
+      <div class="mb-4">
+        <label for="promotion" class="block text-sm font-medium mb-2">Promotion</label>
+        <input type="text" id="promotion" name="promotion" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" value="<%= student && student.promotion ? student.promotion : '' %>" readonly aria-readonly="true">
+      </div>
+      <% if (student && student.promotion && ['1', '2', '3'].includes(student.promotion)) { %>
+        <div class="mb-4">
+          <label for="class" class="block text-sm font-medium mb-2">Class</label>
+          <select id="class" name="class" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true">
+            <option value="" <%= !student.class ? 'selected' : '' %>>Select Class</option>
+            <option value="A" <%= student.class === 'A' ? 'selected' : '' %>>A</option>
+            <option value="B" <%= student.class === 'B' ? 'selected' : '' %>>B</option>
+            <option value="C" <%= student.class === 'C' ? 'selected' : '' %>>C</option>
+            <option value="D" <%= student.class === 'D' ? 'selected' : '' %>>D</option>
+          </select>
         </div>
-        <nav>
-            <a href="/register" aria-label="Register" id="registerLink">Register</a>
-            <a href="/login" aria-label="Login" id="loginLink">Login</a>
-        </nav>
-    </header>
-
-    <!-- Booking Form -->
-    <div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
-        <div class="w-full max-w-4xl mx-auto">
-            <!-- Header -->
-            <div class="text-center mb-12">
-                <h1 class="text-5xl md:text-6xl font-bold mb-4 glow" id="mainTitle">GSOB <span class="electric-text">TRANSIT</span></h1>
-                <p class="text-xl opacity-80" id="subTitle">Your Safe learning journey starts here</p>
-            </div>
-
-            <!-- Booking Form Container -->
-            <form action="/confirm-booking" method="POST" class="ticket-form form-3d bg-white/10 rounded-2xl overflow-hidden shadow-2xl p-8 mb-12">
-                <h2 class="text-2xl font-bold mb-6 text-center glow" id="formTitle">Book Your Learning Ticket</h2>
-                <div class="progress-bar mb-4"></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Full Name (auto-filled) -->
-                    <div class="md:col-span-2">
-                        <label class="block text-sm font-medium mb-2" id="fullNameLabel">Full Name</label>
-                        <input type="text" id="fullName" value="<%= user.name %>" class="input-glow w-full px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-gold transition" readonly>
-                    </div>
-                    <!-- Email (auto-filled) -->
-                    <div>
-                        <label class="block text-sm font-medium mb-2" id="emailLabel">Email</label>
-                        <input type="email" id="email" value="<%= user.email %>" class="input-glow w-full px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-gold transition" readonly>
-                    </div>
-                    <!-- Class -->
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Class</label>
-                        <input type="text" value="<%= student ? student.class : '' %>" class="input-glow w-full px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-gold transition" readonly>
-                    </div>
-                    <!-- Destination select (populated from Destination model) -->
-                    <div>
-                        <label class="block text-sm font-medium mb-2" id="destinationLabel">Destination</label>
-                        <select id="destination" name="destination" class="input-glow w-full px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-gold transition" required>
-                            <option value="" disabled selected id="selectOption">Select your destination</option>
-                            <% destinations.forEach(dest => { %>
-                                <option value="<%= dest.name + ' ' + dest.price + 'RWF' %>">
-                                    <%= dest.name %> – <%= dest.price %> RWF
-                                </option>
-                            <% }) %>
-                        </select>
-                    </div>
-                    <!-- Combination -->
-                    <div>
-                        <label class="block text-sm font-medium mb-2">Combination</label>
-                        <input type="text" value="<%= student && student.combination ? student.combination : '' %>" class="input-glow w-full px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-gold transition" readonly>
-                    </div>
-                </div>
-                <!-- Phone Number -->
-                <div class="mt-6">
-                    <label for="phoneNumber" class="block text-sm font-medium mb-2">MTN Phone Number</label>
-                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="07xxxxxxxx" required 
-                           class="input-glow w-full px-4 py-3 rounded-lg border border-white/20 focus:outline-none focus:ring-2 focus:ring-gold transition">
-                </div>
-                <!-- Submit Button -->
-                <div class="mt-8">
-                    <button type="submit" class="book-btn w-full py-3 px-6 rounded-lg font-medium text-white hover:scale-105 transition pulse">
-                        <span id="bookText">Book Ticket</span>
-                    </button>
-                </div>
-            </form>
+      <% } else if (student && student.promotion && ['4', '5', '6'].includes(student.promotion)) { %>
+        <div class="mb-4">
+          <label for="combination" class="block text-sm font-medium mb-2">Combination</label>
+          <select id="combination" name="combination" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true">
+            <option value="" <%= !student.combination ? 'selected' : '' %>>Select Combination</option>
+            <option value="MPC" <%= student.combination === 'MPC' ? 'selected' : '' %>>MPC</option>
+            <option value="MCB" <%= student.combination === 'MCB' ? 'selected' : '' %>>MCB</option>
+            <option value="ANP" <%= student.combination === 'ANP' ? 'selected' : '' %>>ANP</option>
+            <option value="PCBa" <%= student.combination === 'PCBa' ? 'selected' : '' %>>PCBa</option>
+            <option value="PCBb" <%= student.combination === 'PCBb' ? 'selected' : '' %>>PCBb</option>
+            <option value="PCM" <%= student.combination === 'PCM' ? 'selected' : '' %>>PCM</option>
+          </select>
         </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="footer-3d py-12">
-        <div class="footer-content max-w-6xl mx-auto px-4 text-white">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="text-2xl font-bold mb-4 glow">About GSOB Transit</h3>
-                    <p class="opacity-80">GSOB Transit is your gateway to transformative learning experiences. Book your ticket to world-class events and connect with global leaders.</p>
-                </div>
-                <div>
-                    <h3 class="text-2xl font-bold mb-4 glow">Connect</h3>
-                    <div class="flex space-x-4">
-                        <a href="#" class="social-icon"><i class="fab fa-twitter text-2xl"></i></a>
-                        <a href="#" class="social-icon"><i class="fab fa-instagram text-2xl"></i></a>
-                        <a href="mailto:info@gsob.com" class="social-icon"><i class="fas fa-envelope text-2xl"></i></a>
-                        <a href="#" class="social-icon" id="teamIcon"><i class="fas fa-users text-2xl"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-8 text-center">
-                <p class="opacity-80">Developed by the GSOB Team • © 2025 GSOB Transit. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Developer Modal (static info) -->
-    <div id="developerModal" class="modal">
-        <!-- (Modal content as in original; omitted here for brevity) -->
-    </div>
-
-    <!-- Floating Elements and Scripts -->
-    <div class="fixed top-1/4 left-10 w-8 h-8 rounded-full bg-blue-400/30 floating" style="animation-delay: 0s;"></div>
-    <!-- (Other floating elements, scripts, etc. remain unchanged from original) -->
+      <% } %>
+      <div class="mb-4">
+        <label for="phoneNumber" class="block text-sm font-medium mb-2">Phone Number</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true" placeholder="Enter phone number">
+      </div>
+      <div class="mb-4">
+        <label for="destination" class="block text-sm font-medium mb-2">Destination</label>
+        <select id="destination" name="destination" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true">
+          <option value="">Select Destination</option>
+          <% destinations.forEach(dest => { %>
+            <option value="<%= dest._id %>"><%= dest.name %> - <%= dest.price %> RWF</option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="mb-4">
+        <label for="date" class="block text-sm font-medium mb-2">Date</label>
+        <input type="date" id="date" name="date" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true" min="<%= new Date().toISOString().split('T')[0] %>">
+      </div>
+      <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition">Book Ticket</button>
+    </form>
+  </div>
 </body>
 </html>

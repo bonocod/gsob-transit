@@ -1,65 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GSOB Transit - Confirm Ticket</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #e0f2fe;
-            color: #111827;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSOB Transit - Confirm Ticket</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#2563EB', gold: '#FFD700' }
         }
-        .card {
-            background: rgba(255, 255, 255, 0.5);
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        .input-field {
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            width: 100%;
-            margin-bottom: 1rem;
-        }
-        .btn {
-            background: linear-gradient(135deg, #1e40af, #FFD700);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .btn:hover {
-            transform: scale(1.05);
-        }
-    </style>
+      }
+    }
+  </script>
 </head>
-<body>
-    <div class="card">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
     <h2 class="text-2xl font-bold mb-4 text-center">Confirm Your Ticket</h2>
+    <% if (errorMessage) { %>
+      <div role="alert" class="bg-red-100 text-red-800 px-4 py-2 mb-4 rounded">
+        <%= errorMessage %>
+      </div>
+    <% } %>
     <p class="mb-4 text-center">
-        Name: <%= user && user.name ? user.name : 'Unknown User' %><br>
-        Destination: <%= destination || 'Unknown Destination' %><br>
-        Price: <%= price ? price + ' RWF' : 'Unknown Price' %>
+      Name: <strong><%= user && user.name ? user.name : 'Unknown User' %></strong><br>
+      Destination: <strong><%= destination || 'Unknown Destination' %></strong><br>
+      Price: <strong><%= price ? price + ' RWF' : 'Unknown Price' %></strong>
     </p>
-    <form id="confirmationForm" action="/confirm-booking" method="POST">
-        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-        <input type="hidden" name="destination" value="<%= destination %>">
-        <div>
-            <label for="phoneNumber" class="block mb-1">MTN Phone Number</label>
-            <input type="tel" id="phoneNumber" name="phoneNumber" class="input-field" placeholder="07xxxxxxxx" required>
-        </div>
-        <button type="submit" class="btn w-full mt-4">Book Now</button>
+    <form id="confirmationForm" action="/confirm-booking" method="POST" aria-label="Ticket Confirmation Form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="destination" value="<%= destination %>">
+      <div>
+        <label for="phoneNumber" class="block text-sm font-medium mb-2">MTN Phone Number</label>
+        <input type="tel" id="phoneNumber" name="phone" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" placeholder="07xxxxxxxx" required aria-required="true">
+      </div>
+      <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition mt-4">Book Now</button>
     </form>
-</div>
+  </div>
 </body>
 </html>

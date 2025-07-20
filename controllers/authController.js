@@ -1,75 +1,96 @@
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+const Student = require('../models/Student');
+const logger = require('../config/logger');
 
-// Register Student
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, urubutoCode } = req.body;
 
   try {
-    const existing = await User.findOne({ email });
-    if (existing) {
-      return res.render('register', { error: 'User already exists' });
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.render('register', { errorMessage: 'User already exists', csrfToken: req.csrfToken() });
     }
 
-    if (!name || !email || !password) {
-      return res.render('register', { error: 'All fields are required' });
+    if (!name || !email || !password || !urubutoCode) {
+      return res.render('register', { errorMessage: 'Name, email, password, and Urubuto code are required', csrfToken: req.csrfToken() });
     }
 
-    const hash = await bcrypt.hash(password, 10);
+    const student = await Student.findOne({ urubutoCode });
+    if (!student) {
+      return res.render('register', { errorMessage: 'Urubuto code not found', csrfToken: req.csrfToken() });
+    }
+    if (student.user) {
+      return res.render('register', { errorMessage: 'This Urubuto code is already linked to a user', csrfToken: req.csrfToken() });
+    }
+
     const user = new User({
       name,
       email,
-      password: hash,
+      password,
       role: 'student'
     });
-
     await user.save();
-    // Optionally create a corresponding Student document here if desired
-    res.redirect('/login'); // Trigger confetti
+
+    await Student.findByIdAndUpdate(student._id, { user: user._id });
+
+    logger.info('User registered and linked to student', { email, urubutoCode });
+    res.redirect('/auth/login');
   } catch (err) {
-    console.error('Registration failed:', err);
-    res.render('register', { error: 'Registration failed' });
+    logger.error('Registration failed', { error: err.message, email });
+    res.render('register', { errorMessage: 'Registration failed', csrfToken: req.csrfToken() });
   }
 };
 
-// Login
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     if (!email || !password) {
-      return res.render('login', { error: 'All fields are required' });
+      return res.render('login', { errorMessage: 'All fields are required', csrfToken: req.csrfToken() });
     }
 
     const user = await User.findOne({ email });
-    if (!user) return res.render('login', { error: 'Invalid credentials' });
+    if (!user) {
+      return res.render('login', { errorMessage: 'Invalid credentials', csrfToken: req.csrfToken() });
+    }
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.render('login', { error: 'Invalid credentials' });
+    const match = await user.comparePassword(password);
+    if (!match) {
+      return res.render('login', { errorMessage: 'Invalid credentials', csrfToken: req.csrfToken() });
+    }
 
-    // Set session user data instead of JWT
+    const student = await Student.findOne({ user: user._id });
     req.session.user = {
       id: user._id,
       role: user.role,
       name: user.name,
-      email: user.email
+      email: user.email,
+      // No promotion, class, or combination here; fetched in bookingController
     };
 
+    logger.info('User logged in', { email });
     if (user.role === 'admin') {
       res.redirect('/admin/dashboard');
     } else {
+      if (!student) {
+        return res.render('login', { errorMessage: 'Your account is not linked to a student record. Contact an admin.', csrfToken: req.csrfToken() });
+      }
       res.redirect('/booking');
     }
   } catch (err) {
-    console.error('Login failed:', err);
-    res.render('login', { error: 'Login failed' });
+    logger.error('Login failed', { error: err.message, email });
+    res.render('login', { errorMessage: 'Login failed', csrfToken: req.csrfToken() });
   }
 };
 
 exports.logout = (req, res, next) => {
   req.session.destroy(err => {
-    if (err) return next(err);
+    if (err) {
+      logger.error('Logout failed', { error: err.message });
+      return next(err);
+    }
     res.clearCookie('connect.sid');
+    logger.info('User logged out');
     res.redirect('/auth/login');
   });
 };

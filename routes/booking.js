@@ -5,9 +5,9 @@ const bookingController = require('../controllers/bookingController');
 const router = express.Router();
 
 // Show booking form
-router.get('/', bookingController.showForm);
+router.get('/', bookingController.getBooking);
 
 // Handle booking submission
-router.post('/', validate(schemas.booking), bookingController.create);
+router.post('/', validate(schemas.booking), bookingController.createBooking);
 
 module.exports = router;

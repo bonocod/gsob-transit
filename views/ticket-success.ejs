@@ -1,69 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>GSOB Transit - Ticket Success</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #e0f2fe;
-            color: #111827;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .card {
-            background: rgba(255, 255, 255, 0.5);
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        .success-message {
-            color: #10b981;
-            font-weight: bold;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        .btn {
-            background: linear-gradient(135deg, #1e40af, #FFD700);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: transform 0.2s;
-            text-decoration: none;
-        }
-        .btn:hover {
-            transform: scale(1.05);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSOB Transit - Ticket Success</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="card">
-        <h1 class="success-message">Booking Successful!</h1>
-        <p class="mb-4">Thank you, <strong><%= fullName || 'User' %></strong>, for booking your ticket.</p>
-        <% 
-            // Split the destination to separate location and price
-            const destParts = destination ? destination.split(' ') : [];
-            const pricePart = destParts.pop();
-            const locationPart = destParts.join(' ');
-        %>
-        <p class="mb-2">Destination: <strong><%= locationPart || 'Unknown' %></strong></p>
-        <p class="mb-2">Price: <strong><%= pricePart || 'Unknown' %></strong></p>
-        <p class="mb-4">MTN Phone Number: <strong><%= phoneNumber || 'Not Provided' %></strong></p>
-        <p class="text-sm text-gray-600">
-            Booked on: <strong>
-            <%= new Date().toLocaleString('en-US', {
-                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-                    hour: 'numeric', minute: 'numeric', hour12: true, timeZone: 'Africa/Kigali'
-                }) %> CAT</strong>
-        </p>
-        <a href="/" class="btn mt-4 inline-block">Back to Home</a>
-    </div>
+<body class="bg-gray-100">
+  <div class="container mx-auto mt-10 px-4 text-center">
+    <h2 class="text-2xl font-bold mb-6">Booking Successful!</h2>
+    <p class="text-lg mb-4">Your ticket has been booked. Check your email or account for details.</p>
+    <a href="/" class="inline-block bg-primary text-white px-6 py-3 rounded hover:bg-blue-700 transition">Back to Home</a>
+  </div>
 </body>
 </html>

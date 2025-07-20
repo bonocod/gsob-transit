@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Rate limiter for login
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15m
+  windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5,
   message: 'Too many login attempts — try again in 15 minutes.'
 });
@@ -15,8 +15,8 @@ const loginLimiter = rateLimit({
 // Show registration form
 router.get('/register', (req, res) => {
   res.render('register', {
-    errorMessage: null
-    // csrfToken is already in res.locals
+    errorMessage: null,
+    csrfToken: req.csrfToken()
   });
 });
 
@@ -30,7 +30,8 @@ router.post(
 // Show login form
 router.get('/login', (req, res) => {
   res.render('login', {
-    errorMessage: null
+    errorMessage: null,
+    csrfToken: req.csrfToken()
   });
 });
 
@@ -42,8 +43,7 @@ router.post(
   authController.login
 );
 
-// Logout (GET or POST)
+// Logout
 router.post('/logout', authController.logout);
 
 module.exports = router;
-

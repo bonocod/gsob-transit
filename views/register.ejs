@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Tailwind CSS CDN -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GSOB Transit - Register</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -14,46 +14,41 @@
       }
     }
   </script>
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-  <title>Register - GSOB Transit</title>
 </head>
-<body class="bg-gray-50 flex items-center justify-center min-h-screen">
-  <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-    <h2 class="text-2xl font-bold text-center mb-6">Create an Account</h2>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
     <% if (errorMessage) { %>
       <div role="alert" class="bg-red-100 text-red-800 px-4 py-2 mb-4 rounded">
         <%= errorMessage %>
       </div>
     <% } %>
-    <form action="/auth/register" method="POST" class="space-y-4">
+    <form action="/auth/register" method="POST" aria-label="Registration Form">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-        <input type="text" name="name" id="name" autocomplete="name" required
-               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+      <div class="mb-4">
+        <label for="name" class="block text-sm font-medium mb-2">Full Name</label>
+        <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true">
       </div>
-      <div>
-        <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-        <input type="email" name="email" id="email" autocomplete="email" required
-               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium mb-2">Email</label>
+        <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true" placeholder="e.g., your.email@example.com">
       </div>
-      <div>
-        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-        <input type="password" name="password" id="password" autocomplete="new-password" required
-               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+      <div class="mb-4">
+        <label for="urubutoCode" class="block text-sm font-medium mb-2">Urubuto Code (from your report)</label>
+        <input type="text" id="urubutoCode" name="urubutoCode" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true" placeholder="e.g., 12345">
       </div>
-      <div>
-        <label for="confirmPassword" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-        <input type="password" name="confirmPassword" id="confirmPassword" autocomplete="new-password" required
-               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" />
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium mb-2">Password</label>
+        <input type="password" id="password" name="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true">
       </div>
-      <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors duration-200">Sign Up</button>
+      <div class="mb-6">
+        <label for="confirmPassword" class="block text-sm font-medium mb-2">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true">
+      </div>
+      <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition">Register</button>
     </form>
-    <p class="mt-4 text-center text-sm text-gray-600">
-      Already have an account?
-      <a href="/auth/login" class="text-primary hover:underline">Log in</a>
-    </p>
+    <p class="mt-4 text-center text-gray-600">Already have an account? <a href="/auth/login" class="text-primary hover:underline">Login</a></p>
   </div>
 </body>
 </html>

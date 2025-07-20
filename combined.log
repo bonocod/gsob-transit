@@ -1,0 +1,111 @@
+{"level":"info","message":"Destinations seeded successfully","timestamp":"2025-07-19T14:51:41.941Z"}
+{"level":"info","message":"Deleted 0 invalid bookings","timestamp":"2025-07-19T14:52:25.293Z"}
+{"level":"info","message":"Admin already exists","timestamp":"2025-07-19T14:53:21.243Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T14:54:52.617Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T14:54:54.257Z"}
+{"error":"C:\\Users\\user\\projects\\gsob-transit\\views\\index.ejs:31\n    29|         <nav aria-label=\"Main navigation\">\r\n    30|           <ul class=\"flex items-center space-x-4\">\r\n >> 31|             <% if (user) { %>\r\n    32|               <li><a href=\"/booking\" class=\"text-gray-800 hover:text-primary transition-colors\">Book a Trip</a></li>\r\n    33|               <li>\r\n    34|                 <form action=\"/auth/logout\" method=\"POST\" class=\"inline\">\r\n\nuser is not defined","level":"error","message":"Server error","stack":"ReferenceError: C:\\Users\\user\\projects\\gsob-transit\\views\\index.ejs:31\n    29|         <nav aria-label=\"Main navigation\">\r\n    30|           <ul class=\"flex items-center space-x-4\">\r\n >> 31|             <% if (user) { %>\r\n    32|               <li><a href=\"/booking\" class=\"text-gray-800 hover:text-primary transition-colors\">Book a Trip</a></li>\r\n    33|               <li>\r\n    34|                 <form action=\"/auth/logout\" method=\"POST\" class=\"inline\">\r\n\nuser is not defined\n    at eval (\"C:\\\\Users\\\\user\\\\projects\\\\gsob-transit\\\\views\\\\index.ejs\":12:8)\n    at index (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\ejs\\lib\\ejs.js:703:17)\n    at tryHandleCache (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\ejs\\lib\\ejs.js:274:36)\n    at exports.renderFile [as engine] (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\ejs\\lib\\ejs.js:491:10)\n    at View.render (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\view.js:139:8)\n    at tryRender (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\application.js:627:10)\n    at Function.render (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\application.js:574:3)\n    at ServerResponse.render (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\response.js:909:7)\n    at C:\\Users\\user\\projects\\gsob-transit\\app.js:74:7\n    at Layer.handleRequest (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\lib\\layer.js:152:17)","timestamp":"2025-07-19T14:55:56.578Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T15:11:59.307Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T15:12:03.382Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T15:12:46.303Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T15:12:48.332Z"}
+{"error":"invalid csrf token","level":"error","message":"Server error","stack":"ForbiddenError: invalid csrf token\n    at csrf (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\csurf\\index.js:112:19)\n    at Layer.handleRequest (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:342:13)\n    at C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:297:9\n    at processParams (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:582:12)\n    at next (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:291:5)\n    at Immediate._onImmediate (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express-session\\index.js:514:7)\n    at process.processImmediate (node:internal/timers:487:21)","timestamp":"2025-07-19T15:14:34.227Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T15:30:23.643Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T15:30:31.630Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T15:31:29.526Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T15:31:31.786Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T15:33:41.559Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T15:33:43.250Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T15:47:17.700Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T15:47:19.199Z"}
+{"error":"invalid csrf token","level":"error","message":"Server error","stack":"ForbiddenError: invalid csrf token\n    at csrf (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\csurf\\index.js:112:19)\n    at Layer.handleRequest (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:342:13)\n    at C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:297:9\n    at processParams (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:582:12)\n    at next (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:291:5)\n    at Immediate._onImmediate (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express-session\\index.js:514:7)\n    at process.processImmediate (node:internal/timers:487:21)","timestamp":"2025-07-19T15:47:26.959Z"}
+{"email":"um@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-19T15:48:14.319Z","urubutoCode":"U12345"}
+{"email":"um@gmail.com","error":"E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"um@gmail.com\" }","level":"error","message":"Registration failed","timestamp":"2025-07-19T15:48:14.329Z"}
+{"email":"um@gmail.com","error":"E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"um@gmail.com\" }","level":"error","message":"Registration failed","timestamp":"2025-07-19T15:48:14.338Z"}
+{"email":"um@gmail.com","error":"E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"um@gmail.com\" }","level":"error","message":"Registration failed","timestamp":"2025-07-19T15:48:14.797Z"}
+{"email":"um@gmail.com","error":"E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"um@gmail.com\" }","level":"error","message":"Registration failed","timestamp":"2025-07-19T15:48:15.099Z"}
+{"email":"um@gmail.com","error":"E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"um@gmail.com\" }","level":"error","message":"Registration failed","timestamp":"2025-07-19T15:48:15.104Z"}
+{"email":"um@gmail.com","error":"E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"um@gmail.com\" }","level":"error","message":"Registration failed","timestamp":"2025-07-19T15:48:15.318Z"}
+{"email":"um@gmail.com","error":"E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"um@gmail.com\" }","level":"error","message":"Registration failed","timestamp":"2025-07-19T15:48:16.145Z"}
+{"email":"um@gmail.com","error":"E11000 duplicate key error collection: test.users index: email_1 dup key: { email: \"um@gmail.com\" }","level":"error","message":"Registration failed","timestamp":"2025-07-19T15:48:16.161Z"}
+{"email":"mike@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-19T15:51:18.484Z","urubutoCode":"U12444"}
+{"email":"mike@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-19T15:51:30.171Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T15:58:13.699Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T15:58:15.365Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T15:59:36.579Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T15:59:38.649Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T16:19:43.075Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T16:19:45.017Z"}
+{"error":"C:\\Users\\user\\projects\\gsob-transit\\views\\booking.ejs:22\n    20|   <div class=\"container mx-auto mt-10 px-4\">\r\n    21|     <h2 class=\"text-2xl font-bold mb-6\">Book Your Ticket</h2>\r\n >> 22|     <% if (errorMessage) { %>\r\n    23|       <div role=\"alert\" class=\"bg-red-100 text-red-800 px-4 py-2 mb-4 rounded\">\r\n    24|         <%= errorMessage %>\r\n    25|       </div>\r\n\nerrorMessage is not defined","level":"error","message":"Server error","stack":"ReferenceError: C:\\Users\\user\\projects\\gsob-transit\\views\\booking.ejs:22\n    20|   <div class=\"container mx-auto mt-10 px-4\">\r\n    21|     <h2 class=\"text-2xl font-bold mb-6\">Book Your Ticket</h2>\r\n >> 22|     <% if (errorMessage) { %>\r\n    23|       <div role=\"alert\" class=\"bg-red-100 text-red-800 px-4 py-2 mb-4 rounded\">\r\n    24|         <%= errorMessage %>\r\n    25|       </div>\r\n\nerrorMessage is not defined\n    at eval (\"C:\\\\Users\\\\user\\\\projects\\\\gsob-transit\\\\views\\\\booking.ejs\":12:8)\n    at booking (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\ejs\\lib\\ejs.js:703:17)\n    at tryHandleCache (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\ejs\\lib\\ejs.js:274:36)\n    at exports.renderFile [as engine] (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\ejs\\lib\\ejs.js:491:10)\n    at View.render (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\view.js:139:8)\n    at tryRender (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\application.js:627:10)\n    at Function.render (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\application.js:574:3)\n    at ServerResponse.render (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\response.js:909:7)\n    at exports.getBooking (C:\\Users\\user\\projects\\gsob-transit\\controllers\\bookingController.js:8:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-07-19T16:19:53.845Z"}
+{"email":"intwaribonheur@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-19T16:20:52.174Z","urubutoCode":"10000"}
+{"email":"intwaribonheur@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-19T16:20:57.520Z"}
+{"error":"C:\\Users\\user\\projects\\gsob-transit\\views\\booking.ejs:22\n    20|   <div class=\"container mx-auto mt-10 px-4\">\r\n    21|     <h2 class=\"text-2xl font-bold mb-6\">Book Your Ticket</h2>\r\n >> 22|     <% if (errorMessage) { %>\r\n    23|       <div role=\"alert\" class=\"bg-red-100 text-red-800 px-4 py-2 mb-4 rounded\">\r\n    24|         <%= errorMessage %>\r\n    25|       </div>\r\n\nerrorMessage is not defined","level":"error","message":"Server error","stack":"ReferenceError: C:\\Users\\user\\projects\\gsob-transit\\views\\booking.ejs:22\n    20|   <div class=\"container mx-auto mt-10 px-4\">\r\n    21|     <h2 class=\"text-2xl font-bold mb-6\">Book Your Ticket</h2>\r\n >> 22|     <% if (errorMessage) { %>\r\n    23|       <div role=\"alert\" class=\"bg-red-100 text-red-800 px-4 py-2 mb-4 rounded\">\r\n    24|         <%= errorMessage %>\r\n    25|       </div>\r\n\nerrorMessage is not defined\n    at eval (\"C:\\\\Users\\\\user\\\\projects\\\\gsob-transit\\\\views\\\\booking.ejs\":12:8)\n    at booking (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\ejs\\lib\\ejs.js:703:17)\n    at tryHandleCache (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\ejs\\lib\\ejs.js:274:36)\n    at exports.renderFile [as engine] (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\ejs\\lib\\ejs.js:491:10)\n    at View.render (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\view.js:139:8)\n    at tryRender (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\application.js:627:10)\n    at Function.render (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\application.js:574:3)\n    at ServerResponse.render (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express\\lib\\response.js:909:7)\n    at exports.getBooking (C:\\Users\\user\\projects\\gsob-transit\\controllers\\bookingController.js:8:9)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-07-19T16:20:57.668Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T16:34:10.792Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T16:34:13.158Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T16:38:24.217Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T16:38:25.837Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T16:44:05.689Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T16:44:07.230Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-19T16:50:41.812Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-19T16:50:45.296Z"}
+{"email":"intwaribonheur@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-19T16:56:34.493Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T07:28:17.543Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T07:28:20.899Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-20T07:33:37.759Z","urubutoCode":"10002"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T07:33:48.869Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T07:33:49.108Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T07:33:49.113Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T07:33:49.180Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T07:33:52.071Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T07:33:52.076Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T07:41:37.335Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T07:41:41.566Z"}
+{"level":"warn","message":"No user session found","timestamp":"2025-07-20T07:42:31.691Z"}
+{"level":"warn","message":"No user session found","timestamp":"2025-07-20T07:42:35.729Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T07:44:09.877Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T07:44:12.143Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T07:44:14.678Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T07:48:37.207Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T07:48:38.912Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T07:49:15.528Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T07:49:17.234Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T07:50:35.043Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T07:50:41.906Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T07:50:55.123Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T07:50:56.605Z"}
+{"level":"info","message":"Destinations seeded successfully","timestamp":"2025-07-20T07:51:08.287Z"}
+{"level":"warn","message":"No user session found","timestamp":"2025-07-20T07:51:13.762Z"}
+{"level":"warn","message":"No user session found","timestamp":"2025-07-20T07:51:19.830Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T07:51:25.622Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T07:56:53.250Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T07:56:54.875Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T08:00:04.904Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T08:00:06.368Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T08:00:29.150Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T08:00:31.324Z"}
+{"level":"warn","message":"No user session found","timestamp":"2025-07-20T08:00:45.185Z"}
+{"error":"invalid csrf token","level":"error","message":"Server error","stack":"ForbiddenError: invalid csrf token\n    at csrf (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\csurf\\index.js:112:19)\n    at Layer.handleRequest (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\lib\\layer.js:152:17)\n    at trimPrefix (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:342:13)\n    at C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:297:9\n    at processParams (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:582:12)\n    at next (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\router\\index.js:291:5)\n    at Immediate._onImmediate (C:\\Users\\user\\projects\\gsob-transit\\node_modules\\express-session\\index.js:514:7)\n    at process.processImmediate (node:internal/timers:487:21)","timestamp":"2025-07-20T08:00:49.627Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T08:00:56.842Z"}
+{"date":"2025-07-31","destination":"687c9fec2d84f1b056e6c86a","level":"info","message":"Booking created","timestamp":"2025-07-20T08:01:08.657Z","userId":"687c9bcf49f126cf299ec30b"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T08:03:28.312Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T08:03:31.556Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T08:03:34.244Z"}
+{"date":"2025-07-26","destination":"687c9fec2d84f1b056e6c869","level":"info","message":"Booking created","timestamp":"2025-07-20T08:03:44.448Z","userId":"687c9bcf49f126cf299ec30b"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T17:56:09.950Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T17:56:14.379Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T18:14:58.692Z"}
+{"date":"2025-07-24","destination":"687c9fec2d84f1b056e6c86a","level":"info","message":"Booking created","timestamp":"2025-07-20T18:15:18.158Z","userId":"687c9bcf49f126cf299ec30b"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T18:19:14.384Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T18:19:34.769Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T18:20:05.333Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T18:20:40.620Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T18:22:47.569Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T18:22:50.571Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-20T18:28:39.069Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-20T18:28:40.950Z"}
+{"level":"warn","message":"No user session found","timestamp":"2025-07-20T18:28:42.351Z"}
+{"level":"warn","message":"No user session found","timestamp":"2025-07-20T18:28:48.346Z"}
+{"email":"bruno@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T18:29:04.933Z"}
+{"level":"warn","message":"Booking limit reached","timestamp":"2025-07-20T18:29:44.674Z","userId":"687c9bcf49f126cf299ec30b"}
+{"email":"brian@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-20T18:30:48.145Z","urubutoCode":"10023"}
+{"email":"brian@gmail.com","level":"info","message":"User logged in","timestamp":"2025-07-20T18:30:54.936Z"}
+{"date":"2025-07-23","destination":"687c9fec2d84f1b056e6c86a","level":"info","message":"Booking created","phoneNumber":"078765433","timestamp":"2025-07-20T18:31:24.851Z","userId":"687d35d62fec785868f6e098"}
