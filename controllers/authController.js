@@ -51,12 +51,12 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.render('login', { errorMessage: 'Invalid credentials', csrfToken: req.csrfToken() });
+      return res.render('login', { errorMessage: 'invalid email address', csrfToken: req.csrfToken() });
     }
 
     const match = await user.comparePassword(password);
     if (!match) {
-      return res.render('login', { errorMessage: 'Invalid credentials', csrfToken: req.csrfToken() });
+      return res.render('login', { errorMessage: 'incorrect password', csrfToken: req.csrfToken() });
     }
 
     const student = await Student.findOne({ user: user._id });
@@ -64,18 +64,23 @@ exports.login = async (req, res) => {
       id: user._id,
       role: user.role,
       name: user.name,
-      email: user.email,
-      // No promotion, class, or combination here; fetched in bookingController
+      email: user.email
     };
 
-    logger.info('User logged in', { email });
-    if (user.role === 'admin') {
-      res.redirect('/admin/dashboard');
-    } else {
-      if (!student) {
-        return res.render('login', { errorMessage: 'Your account is not linked to a student record. Contact an admin.', csrfToken: req.csrfToken() });
-      }
-      res.redirect('/booking');
+    logger.info('User logged in', { email, role: user.role });
+    switch (user.role) {
+      case 'admin':
+        res.redirect('/admin/dashboard');
+        break;
+      case 'student':
+        if (!student) {
+          return res.render('login', { errorMessage: 'Your account is not linked to a student record. Contact an admin.', csrfToken: req.csrfToken() });
+        }
+        res.redirect('/booking');
+        break;
+      default:
+        logger.warn('Unknown role detected', { email, role: user.role });
+        return res.render('login', { errorMessage: 'Unknown user role. Contact an admin.', csrfToken: req.csrfToken() });
     }
   } catch (err) {
     logger.error('Login failed', { error: err.message, email });

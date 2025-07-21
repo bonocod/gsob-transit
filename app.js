@@ -8,8 +8,7 @@ const rateLimit = require('express-rate-limit');
 const authMiddleware = require('./middleware/auth');
 const isAdmin = require('./middleware/isAdmin');
 const adminRoutes = require('./routes/admin');
-const confirmBookingRoutes = require('./routes/confirm-booking');
-const unpaidStudentsRoutes = require('./routes/unpaid-students');
+const unpaidStudentsRoutes = require('./routes/unpaid-students.js')
 const logger = require('./config/logger');
 const connectDB = require('./config/db');
 
@@ -45,11 +44,7 @@ app.use(session({
 app.use(csurf());
 
 // Rate limiting for sensitive routes
-const confirmBookingLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,
-  message: 'Too many booking attempts. Please try again later.'
-});
+
 
 // CSRF token middleware
 app.use((req, res, next) => {
@@ -65,7 +60,6 @@ const authRoutes = require('./routes/auth');
 const bookingRoutes = require('./routes/booking');
 app.use('/auth', authRoutes);
 app.use('/booking', bookingRoutes);
-app.use('/ticket-confirmation', authMiddleware, confirmBookingLimiter, confirmBookingRoutes);
 app.use('/admin', authMiddleware, isAdmin, adminRoutes);
 app.use('/unpaid-students', authMiddleware, isAdmin, unpaidStudentsRoutes);
 
