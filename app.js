@@ -19,6 +19,8 @@ connectDB();
 // View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.set('trust proxy', 1);
+
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -40,7 +42,16 @@ app.use(session({
     maxAge: 24 * 60 * 60 * 1000 // 1 day
   }
 }));
-app.use(csurf());
+const csrfProtection = csrf({
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+  }
+});
+
+app.use(csrfProtection);
+
 
 // Rate limiting for sensitive routes
 const limiter = rateLimit({
