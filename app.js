@@ -8,7 +8,6 @@ const rateLimit = require('express-rate-limit');
 const authMiddleware = require('./middleware/auth');
 const isAdmin = require('./middleware/isAdmin');
 const adminRoutes = require('./routes/admin');
-const unpaidStudentsRoutes = require('./routes/unpaid-students.js')
 const logger = require('./config/logger');
 const connectDB = require('./config/db');
 
@@ -59,9 +58,9 @@ app.use((req, res, next) => {
 const authRoutes = require('./routes/auth');
 const bookingRoutes = require('./routes/booking');
 app.use('/auth', authRoutes);
-app.use('/booking', bookingRoutes);
+app.use('/booking',authMiddleware, bookingRoutes);
 app.use('/admin', authMiddleware, isAdmin, adminRoutes);
-app.use('/unpaid-students', authMiddleware, isAdmin, unpaidStudentsRoutes);
+
 
 app.get('/ticket-success', (req, res) => res.render('ticket-success'));
 app.get('/ticket-failure', (req, res) => res.render('ticket-failure', { message: req.query.message }));
@@ -99,3 +98,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+

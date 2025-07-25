@@ -8,13 +8,14 @@
   <div class="container mt-5">
 
     <h2>Promotion: <%= promotion %></h2>
-    <p>Select a <%= ['S1','S2','S3'].includes(promotion)?'Class':'Combination' %>:</p>
+    <p>Select a <%= ['S1','S2','S3'].includes(promotion) ? 'Class' : 'Combination' %>:</p>
+
     <div class="row row-cols-1 row-cols-md-3 g-4">
-      <% items.forEach(item=>{ %>
+      <% items.forEach(item => { %>
         <div class="col">
           <div class="card shadow-sm text-center h-100">
             <div class="card-body d-flex flex-column justify-content-center">
-              <h5 class="card-title"><%= item||'—' %></h5>
+              <h5 class="card-title"><%= item || '—' %></h5>
               <a href="/admin/manage/<%= promotion %>/<%= item %>" class="btn btn-primary mt-3">
                 View Students
               </a>
@@ -23,11 +24,10 @@
         </div>
       <% }) %>
     </div>
+
     <div class="mt-4">
       <a href="/admin/summary" class="btn btn-secondary">Back to Summary</a>
     </div>
-
   </div>
 </body>
 </html>
-

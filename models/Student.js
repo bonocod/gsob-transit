@@ -26,12 +26,12 @@ const studentSchema = new mongoose.Schema({
 
   class: {
     type: String,
-    required: function() { return ['1', '2', '3'].includes(this.promotion); },
+    required: function() { return ['S1', 'S2', 'S3'].includes(this.promotion); },
     enum: ['A', 'B', 'C', 'D']
   },
   combination: {
     type: String,
-    required: function() { return ['4', '5', '6'].includes(this.promotion); },
+    required: function() { return ['S4', 'S5', 'S6'].includes(this.promotion); },
     enum: ['MPC', 'MCB', 'ANP', 'PCBa', 'PCBb', 'PCM']
   },
   user: {

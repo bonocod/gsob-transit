@@ -1,28 +1,40 @@
 const mongoose = require('mongoose');
 const Student = require('./models/Student');
+const User = require('./models/User');
 require('dotenv').config();
 
-mongoose.connect(process.env.MONGO_URI);
+async function seed() {
+  await mongoose.connect(process.env.MONGO_URI);
 
-const students = [];
-for (let i = 0; i < 1000; i++) {
-  const urubutoCode = Math.floor(10000 + (i % 90000)).toString(); // Generates 10000 to 99999
-  const promotion = `S${(i % 6) + 1}`; // "S1" to "S6"
+  // ⚠️ WARNING: Deletes all users and students!
+  await User.deleteMany({});
+  await Student.deleteMany({});
 
-  students.push({
-    _id: `S${String(i + 1).padStart(4, '0')}`,
-    name: `Student ${i + 1}`,
-    urubutoCode,
-    email: `student${i + 1}@gsob.com`,
-    promotion,
-    ...(promotion <= 'S3'
-      ? { class: ['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)] }
-      : { combination: ['MPC', 'MCB', 'ANP', 'PCBa', 'PCBb', 'PCM'][Math.floor(Math.random() * 6)] }
-    )
-  });
+  const students = [];
+  for (let i = 0; i < 1000; i++) {
+    const urubutoCode = (10000 + i).toString(); // ✅ Starts from 10000
+    const promotion = `S${(i % 6) + 1}`;         // S1 to S6
+
+    students.push({
+      _id: `S${String(i + 1).padStart(4, '0')}`,
+      name: `Student ${i + 1}`,
+      urubutoCode,
+      email: `student${i + 1}@gsob.com`,
+      promotion,
+      ...(promotion <= 'S3'
+        ? { class: ['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)] }
+        : { combination: ['MPC', 'MCB', 'ANP', 'PCBa', 'PCBb', 'PCM'][Math.floor(Math.random() * 6)] }
+      )
+    });
+  }
+
+  await Student.insertMany(students);
+  console.log('✅ 1000 students seeded from urubutoCode 10000 to 10999');
+
+  await mongoose.disconnect();
 }
 
-Student.insertMany(students)
-  .then(() => console.log('1000 students seeded'))
-  .catch(err => console.error('Error seeding students:', err))
-  .finally(() => mongoose.connection.close());
+seed().catch(err => {
+  console.error('❌ Error while seeding:', err);
+  mongoose.disconnect();
+});

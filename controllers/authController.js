@@ -70,13 +70,13 @@ exports.login = async (req, res) => {
     logger.info('User logged in', { email, role: user.role });
     switch (user.role) {
       case 'admin':
-        res.redirect('/admin/dashboard');
+        res.redirect('/');
         break;
       case 'student':
         if (!student) {
           return res.render('login', { errorMessage: 'Your account is not linked to a student record. Contact an admin.', csrfToken: req.csrfToken() });
         }
-        res.redirect('/booking');
+        res.redirect('/');
         break;
       default:
         logger.warn('Unknown role detected', { email, role: user.role });
@@ -96,6 +96,6 @@ exports.logout = (req, res, next) => {
     }
     res.clearCookie('connect.sid');
     logger.info('User logged out');
-    res.redirect('/auth/login');
+    res.redirect('/');
   });
 };

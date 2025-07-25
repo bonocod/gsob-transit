@@ -44,6 +44,6 @@ router.post(
 );
 
 // Logout
-router.post('/logout', authController.logout);
+router.get('/logout', authController.logout);
 
 module.exports = router;
