@@ -22,7 +22,11 @@ const bookingSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['pending', 'confirmed', 'paid'],
-    default: 'pending'
+    default: 'paid' // You can keep this if all bookings are paid immediately
+  },
+  price: {
+    type: Number,
+    required: true
   },
   bookedAt: {
     type: Date,

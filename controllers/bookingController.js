@@ -22,6 +22,7 @@ exports.getBooking = async (req, res) => {
     } else {
       logger.warn('No user session found');
     }
+
     res.render('booking', {
       csrfToken: req.csrfToken(),
       destinations,
@@ -58,16 +59,24 @@ exports.createBooking = async (req, res) => {
       throw new Error('All fields are required');
     }
 
+    // Look up destination price
+    const destinationDoc = await Destination.findById(destination);
+    if (!destinationDoc) {
+      throw new Error('Selected destination not found');
+    }
+
     const booking = new Booking({
       user: userId,
-      destination,
+      destination: destinationDoc.name,
       phoneNumber,
       date,
-      status: 'pending'
+      status: 'paid', // ← Set directly to paid
+      price: parseInt(destinationDoc.price)
     });
+
     await booking.save();
 
-    logger.info('Booking created', { userId, destination, date, phoneNumber });
+    logger.info('Booking created and marked as paid', { userId, destination: destinationDoc.name, price: destinationDoc.price });
     res.redirect('/ticket-success');
   } catch (err) {
     logger.error('Error creating booking', { error: err.message, userId });

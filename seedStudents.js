@@ -7,14 +7,18 @@ mongoose.connect(process.env.MONGO_URI);
 const students = [];
 for (let i = 0; i < 1000; i++) {
   const urubutoCode = Math.floor(10000 + (i % 90000)).toString(); // Generates 10000 to 99999
-  const promotion = String((i % 6) + 1); // Cycle through 1-6
+  const promotion = `S${(i % 6) + 1}`; // "S1" to "S6"
+
   students.push({
-    _id: `S${String(i + 1).padStart(4, '0')}`, // e.g., S0001 to S1000
+    _id: `S${String(i + 1).padStart(4, '0')}`,
     name: `Student ${i + 1}`,
     urubutoCode,
     email: `student${i + 1}@gsob.com`,
     promotion,
-    ...(promotion <= '3' ? { class: ['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)] } : { combination: ['MPC', 'MCB', 'ANP', 'PCBa', 'PCBb', 'PCM'][Math.floor(Math.random() * 6)] })
+    ...(promotion <= 'S3'
+      ? { class: ['A', 'B', 'C', 'D'][Math.floor(Math.random() * 4)] }
+      : { combination: ['MPC', 'MCB', 'ANP', 'PCBa', 'PCBb', 'PCM'][Math.floor(Math.random() * 6)] }
+    )
   });
 }
 

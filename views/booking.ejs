@@ -34,7 +34,7 @@
         <label for="promotion" class="block text-sm font-medium mb-2">Promotion</label>
         <input type="text" id="promotion" name="promotion" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" value="<%= student && student.promotion ? student.promotion : '' %>" readonly aria-readonly="true">
       </div>
-      <% if (student && student.promotion && ['1', '2', '3'].includes(student.promotion)) { %>
+      <% if (student && student.promotion && ['S1', 'S2', 'S3'].includes(student.promotion)) { %>
         <div class="mb-4">
           <label for="class" class="block text-sm font-medium mb-2">Class</label>
           <select id="class" name="class" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true">
@@ -45,7 +45,7 @@
             <option value="D" <%= student.class === 'D' ? 'selected' : '' %>>D</option>
           </select>
         </div>
-      <% } else if (student && student.promotion && ['4', '5', '6'].includes(student.promotion)) { %>
+      <% } else if (student && student.promotion && ['S4', 'S5', 'S6'].includes(student.promotion)) { %>
         <div class="mb-4">
           <label for="combination" class="block text-sm font-medium mb-2">Combination</label>
           <select id="combination" name="combination" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true">
@@ -68,7 +68,7 @@
         <select id="destination" name="destination" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary" required aria-required="true">
           <option value="">Select Destination</option>
           <% destinations.forEach(dest => { %>
-            <option value="<%= dest._id %>"><%= dest.name %> - <%= dest.price %> RWF</option>
+            <option value="<%= dest._id %>"><%= dest.name %>  <%= dest.price %> RWF</option>
           <% }) %>
         </select>
       </div>

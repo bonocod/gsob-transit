@@ -127,3 +127,47 @@
 {"email":"bonheurintwari52@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-21T06:52:32.202Z","urubutoCode":"10040"}
 {"email":"bonheurintwari52@gmail.com","level":"info","message":"User logged in","role":"student","timestamp":"2025-07-21T06:52:39.559Z"}
 {"email":"bonheurintwari52@gmail.com","level":"info","message":"User logged in","role":"admin","timestamp":"2025-07-21T06:56:21.282Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T07:12:44.367Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T07:12:46.516Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T07:14:11.836Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T07:14:14.588Z"}
+{"email":"klf@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-21T07:17:01.850Z","urubutoCode":"10050"}
+{"email":"klf@gmail.com","level":"info","message":"User logged in","role":"student","timestamp":"2025-07-21T07:17:09.244Z"}
+{"date":"2025-07-31","destination":"687c9fec2d84f1b056e6c86a","level":"info","message":"Booking created","phoneNumber":"0876544345","timestamp":"2025-07-21T07:17:31.092Z","userId":"687de96c69c42f03b045ec96"}
+{"email":"bonheurintwari52@gmail.com","level":"info","message":"User logged in","role":"admin","timestamp":"2025-07-21T07:17:59.327Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T07:23:09.298Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T07:23:11.633Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T07:24:06.396Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T07:24:07.785Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T07:26:50.721Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T07:26:52.372Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T07:27:38.836Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T07:27:40.274Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T07:30:06.132Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T07:30:08.542Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T07:34:52.788Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T07:34:56.339Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T07:40:25.109Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T07:40:29.590Z"}
+{"email":"kf@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-21T07:41:21.050Z","urubutoCode":"10100"}
+{"email":"kf@gmail.com","level":"info","message":"User logged in","role":"student","timestamp":"2025-07-21T07:41:28.715Z"}
+{"error":"Booking validation failed: price: Cast to Number failed for value \"NaN\" (type number) at path \"price\"","level":"error","message":"Error creating booking","timestamp":"2025-07-21T07:41:51.353Z","userId":"687def1fd1acc88ceb69b7d8"}
+{"level":"info","message":"Destinations seeded successfully","timestamp":"2025-07-21T07:48:34.320Z"}
+{"destination":"Huye-Musanze","level":"info","message":"Booking created and marked as paid","price":4500,"timestamp":"2025-07-21T07:50:11.736Z","userId":"687def1fd1acc88ceb69b7d8"}
+{"email":"bonheurintwari52@gmail.com","level":"info","message":"User logged in","role":"admin","timestamp":"2025-07-21T07:50:34.728Z"}
+{"level":"warn","message":"No student record found for user","timestamp":"2025-07-21T07:52:42.901Z","userId":"687de3afb4da2fa175e24d80"}
+{"level":"warn","message":"No student record found for user","timestamp":"2025-07-21T07:52:46.499Z","userId":"687de3afb4da2fa175e24d80"}
+{"email":"kf@gmail.com","level":"info","message":"User logged in","role":"student","timestamp":"2025-07-21T07:52:50.533Z"}
+{"level":"warn","message":"Booking limit reached","timestamp":"2025-07-21T07:53:20.342Z","userId":"687def1fd1acc88ceb69b7d8"}
+{"email":"bonheurintwari52@gmail.com","level":"info","message":"User logged in","role":"admin","timestamp":"2025-07-21T07:53:49.096Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-21T08:31:37.637Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-21T08:31:40.088Z"}
+{"email":"bonheurintwari52@gmail.com","level":"info","message":"User logged in","role":"admin","timestamp":"2025-07-21T08:33:22.886Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-24T09:06:24.098Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-24T09:06:27.430Z"}
+{"email":"mucyo@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-24T09:07:43.383Z","urubutoCode":"10067"}
+{"email":"mucyo@gmail.com","level":"info","message":"User logged in","role":"student","timestamp":"2025-07-24T09:08:39.356Z"}
+{"email":"mucyo@gmail.com","level":"info","message":"User logged in","role":"student","timestamp":"2025-07-24T09:09:25.442Z"}
+{"destination":"Huye-Muhanga","level":"info","message":"Booking created and marked as paid","price":4200,"timestamp":"2025-07-24T09:10:25.274Z","userId":"6881f7dd1565d1db1114a695"}
+{"level":"warn","message":"Booking limit reached","timestamp":"2025-07-24T09:10:29.448Z","userId":"6881f7dd1565d1db1114a695"}
+{"email":"bonheurintwari52@gmail.com","level":"info","message":"User logged in","role":"admin","timestamp":"2025-07-24T09:11:22.825Z"}
