@@ -3,7 +3,7 @@ require('dotenv').config();
 const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
-const csurf = require('csurf');
+const csrf = require('csurf');
 const rateLimit = require('express-rate-limit');
 const authMiddleware = require('./middleware/auth');
 const isAdmin = require('./middleware/isAdmin');
