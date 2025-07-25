@@ -3,14 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GSOB Transit - Ticket Failure</title>
+  <title>Booking Failed - GSOB Transit</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#2563EB', gold: '#FFD700' }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 </head>
-<body class="bg-gray-100">
-  <div class="container mx-auto mt-10 px-4 text-center">
-    <h2 class="text-2xl font-bold mb-6">Booking Failed!</h2>
-    <p class="text-lg mb-4"><%= typeof message !== 'undefined' ? message : 'An error occurred. Please try again.' %></p>
-    <a href="/booking" class="inline-block bg-primary text-white px-6 py-3 rounded hover:bg-blue-700 transition">Try Again</a>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="/" class="text-2xl font-bold text-primary">GSOB Transit</a>
+        <a href="/" class="text-gray-800 hover:text-primary transition-colors duration-200">Home</a>
+      </div>
+    </div>
+  </header>
+  <div class="container mx-auto mt-10 px-4 sm:px-6 lg:px-8 text-center">
+    <i class="fas fa-exclamation-circle text-6xl text-red-500 mb-4"></i>
+    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Booking Failed!</h2>
+    <div class="bg-red-100 text-red-800 px-4 py-3 mb-6 rounded-lg border border-red-300 max-w-lg mx-auto">
+      <%= typeof message !== 'undefined' ? message : 'An error occurred. Please try again.' %>
+    </div>
+    <a href="/booking" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">Try Again</a>
   </div>
 </body>
 </html>

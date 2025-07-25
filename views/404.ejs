@@ -1,11 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>404 Not Found</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 Not Found - GSOB Transit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#2563EB', gold: '#FFD700' }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 </head>
-<body>
-    <h1>404 - Page Not Found</h1>
-    <p><%= message %></p>
-    <p><a href="/">Go to Home</a></p>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="/" class="text-2xl font-bold text-primary">GSOB Transit</a>
+        <a href="/" class="text-gray-800 hover:text-primary transition-colors duration-200">Home</a>
+      </div>
+    </div>
+  </header>
+  <div class="container mx-auto mt-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center min-h-screen">
+    <i class="fas fa-exclamation-triangle text-6xl sm:text-7xl text-yellow-500 mb-4"></i>
+    <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">404 - Page Not Found</h1>
+    <div class="bg-yellow-100 text-yellow-800 px-4 py-3 mb-6 rounded-lg border border-yellow-300 max-w-lg text-center">
+      <%= message %>
+    </div>
+    <a href="/" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">Go to Homepage</a>
+  </div>
 </body>
 </html>

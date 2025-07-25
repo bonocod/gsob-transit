@@ -51,12 +51,12 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.render('login', { errorMessage: 'invalid email address', csrfToken: req.csrfToken() });
+      return res.render('login', { errorMessage: 'the email or password entered was incorrect', csrfToken: req.csrfToken() });
     }
 
     const match = await user.comparePassword(password);
     if (!match) {
-      return res.render('login', { errorMessage: 'incorrect password', csrfToken: req.csrfToken() });
+      return res.render('login', { errorMessage: 'the email or password entered was incorrect', csrfToken: req.csrfToken() });
     }
 
     const student = await Student.findOne({ user: user._id });

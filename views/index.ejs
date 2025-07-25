@@ -16,24 +16,33 @@
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 </head>
-<body class="bg-gray-100">
-  <header class="bg-white shadow">
+<body class="bg-gray-50 font-sans">
+  <header class="bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
-        <a href="/" class="text-xl font-bold text-primary">GSOB Transit</a>
-        <nav aria-label="Main navigation">
-          <ul class="flex items-center space-x-4">
+        <a href="/" class="text-2xl font-bold text-primary">GSOB Transit</a>
+        <nav aria-label="Main navigation" class="flex items-center">
+          <button class="sm:hidden text-gray-800 focus:outline-none" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+            <i class="fas fa-bars text-2xl"></i>
+          </button>
+          <button class="sm:hidden text-gray-800" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" aria-controls="mobile-menu" aria-expanded="false">
+          <i class="fas fa-bars text-2xl"></i>
+          </button>
+          <ul id="mobile-menu" class="hidden sm:flex sm:items-center sm:space-x-4 flex-col sm:flex-row absolute sm:static top-16 left-0 w-full sm:w-auto bg-white sm:bg-transparent shadow-md sm:shadow-none p-4 sm:p-0 space-y-4 sm:space-y-0">
+           <!-- Existing nav items -->
+          </ul>
+          <ul id="mobile-menu" class="hidden sm:flex flex-col sm:flex-row absolute sm:static top-16 left-0 w-full sm:w-auto bg-white sm:bg-transparent shadow-md sm:shadow-none p-4 sm:p-0 space-y-4 sm:space-y-0 sm:space-x-4">
             <% if (currentUser) { %>
-              <li><span class="text-gray-800">Welcome, <%= currentUser.name %></span></li>
+              <li class="text-gray-800"><span>Welcome, <%= currentUser.name %></span></li>
               <% if (currentUser.role === 'admin') { %>
-                <li><a href="/admin/dashboard" class="text-gray-800 hover:text-primary transition-colors">Admin Dashboard</a></li>
+                <li><a href="/admin/dashboard" class="text-gray-800 hover:text-primary transition-colors duration-200">Admin Dashboard</a></li>
               <% } else { %>
-                <li><a href="/booking" class="text-gray-800 hover:text-primary transition-colors">Book Ticket</a></li>
+                <li><a href="/booking" class="text-gray-800 hover:text-primary transition-colors duration-200">Book Ticket</a></li>
               <% } %>
-              <li><a href="/auth/logout" class="text-gray-800 hover:text-primary transition-colors">Logout</a></li>
+              <li><a href="/auth/logout" class="text-gray-800 hover:text-primary transition-colors duration-200">Logout</a></li>
             <% } else { %>
-              <li><a href="/auth/login" class="text-gray-800 hover:text-primary transition-colors">Login</a></li>
-              <li><a href="/auth/register" class="text-gray-800 hover:text-primary transition-colors">Register</a></li>
+              <li><a href="/auth/login" class="text-gray-800 hover:text-primary transition-colors duration-200">Login</a></li>
+              <li><a href="/auth/register" class="text-gray-800 hover:text-primary transition-colors duration-200">Register</a></li>
             <% } %>
           </ul>
         </nav>
@@ -41,53 +50,50 @@
     </div>
   </header>
 
-  <div class="min-h-screen flex flex-col items-center justify-center px-4 py-12">
-    <div class="text-center mb-12">
-      <h1 class="text-5xl md:text-6xl font-bold mb-4">GSOB <span class="text-primary">TRANSIT</span></h1>
-      <p class="text-xl text-gray-700">Your Safe Learning Journey Starts Here</p>
-    </div>
-
-    <div class="max-w-4xl mx-auto text-center">
+  <main class="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-b from-gray-50 to-gray-100">
+    <div class="text-center max-w-3xl mx-auto">
+      <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">GSOB <span class="text-primary">TRANSIT</span></h1>
+      <p class="text-lg sm:text-xl text-gray-700 mb-8">Your Safe Learning Journey Starts Here</p>
       <% if (currentUser) { %>
-        <p class="text-lg text-gray-800 mb-6">
+        <p class="text-base sm:text-lg text-gray-600 mb-6">
           <% if (currentUser.role === 'admin') { %>
-            Manage student bookings, view summaries, and track payments from the admin dashboard.
+            Manage student bookings and track payments from the admin dashboard.
           <% } else { %>
-            Book your ticket to your next learning destination with ease.
+            Book your ticket to your next destination with ease.
           <% } %>
         </p>
-        <a href="<%= currentUser.role === 'admin' ? '/admin/dashboard' : '/booking' %>" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+        <a href="<%= currentUser.role === 'admin' ? '/admin/dashboard' : '/booking' %>" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">
           <%= currentUser.role === 'admin' ? 'Go to Dashboard' : 'Book Now' %>
         </a>
       <% } else { %>
-        <p class="text-lg text-gray-800 mb-6">Join GSOB Transit to book your learning journey today.</p>
-        <div class="flex justify-center space-x-4">
-          <a href="/auth/register" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">Register</a>
-          <a href="/auth/login" class="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition">Login</a>
+        <p class="text-base sm:text-lg text-gray-600 mb-6">Join GSOB Transit to book your learning journey today.</p>
+        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+          <a href="/auth/register" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">Register</a>
+          <a href="/auth/login" class="inline-block bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200 text-lg font-semibold">Login</a>
         </div>
       <% } %>
     </div>
-  </div>
+  </main>
 
   <footer class="bg-gray-800 text-white py-12">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
         <div>
-          <h3 class="text-2xl font-bold mb-4">About GSOB Transit</h3>
-          <p class="text-gray-300">GSOB Transit is your gateway to transformative learning experiences. Book your ticket to world-class events and connect with global leaders.</p>
+          <h3 class="text-xl font-bold mb-4">About GSOB Transit</h3>
+          <p class="text-gray-300 text-sm">GSOB Transit is your gateway to seamless travel for learning experiences. Book your ticket and connect with your educational journey.</p>
         </div>
         <div>
-          <h3 class="text-2xl font-bold mb-4">Connect</h3>
+          <h3 class="text-xl font-bold mb-4">Connect</h3>
           <div class="flex space-x-4">
-            <a href="#" class="text-gray-300 hover:text-primary"><i class="fab fa-twitter text-2xl"></i></a>
-            <a href="#" class="text-gray-300 hover:text-primary"><i class="fab fa-instagram text-2xl"></i></a>
-            <a href="mailto:info@gsob.com" class="text-gray-300 hover:text-primary"><i class="fas fa-envelope text-2xl"></i></a>
-            <a href="#" class="text-gray-300 hover:text-primary"><i class="fas fa-users text-2xl"></i></a>
+            <a href="#" class="text-gray-300 hover:text-primary transition-colors duration-200"><i class="fab fa-twitter text-2xl"></i></a>
+            <a href="#" class="text-gray-300 hover:text-primary transition-colors duration-200"><i class="fab fa-instagram text-2xl"></i></a>
+            <a href="mailto:info@gsob.com" class="text-gray-300 hover:text-primary transition-colors duration-200"><i class="fas fa-envelope text-2xl"></i></a>
+            <a href="#" class="text-gray-300 hover:text-primary transition-colors duration-200"><i class="fas fa-users text-2xl"></i></a>
           </div>
         </div>
       </div>
       <div class="mt-8 text-center">
-        <p class="text-gray-300">Developed by the GSOB Team • © 2025 GSOB Transit. All rights reserved.</p>
+        <p class="text-gray-300 text-sm">Developed by the GSOB Team • © 2025 GSOB Transit. All rights reserved.</p>
       </div>
     </div>
   </footer>

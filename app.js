@@ -43,7 +43,10 @@ app.use(session({
 app.use(csurf());
 
 // Rate limiting for sensitive routes
-
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
 
 // CSRF token middleware
 app.use((req, res, next) => {
@@ -57,8 +60,8 @@ app.use((req, res, next) => {
 // Routes
 const authRoutes = require('./routes/auth');
 const bookingRoutes = require('./routes/booking');
-app.use('/auth', authRoutes);
-app.use('/booking',authMiddleware, bookingRoutes);
+app.use('/auth',limiter, authRoutes);
+app.use('/booking',limiter,authMiddleware, bookingRoutes);
 app.use('/admin', authMiddleware, isAdmin, adminRoutes);
 
 

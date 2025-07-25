@@ -324,3 +324,18 @@
 {"email":"lea@gmail.com","level":"info","message":"User registered and linked to student","timestamp":"2025-07-25T13:56:22.186Z","urubutoCode":"10013"}
 {"email":"lea@gmail.com","level":"info","message":"User logged in","role":"student","timestamp":"2025-07-25T13:56:28.905Z"}
 {"email":"bonheurintwari52@gmail.com","level":"info","message":"User logged in","role":"admin","timestamp":"2025-07-25T13:57:12.921Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-25T16:48:09.290Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-25T16:48:11.174Z"}
+{"email":"lea@gmail.com","level":"info","message":"User logged in","role":"student","timestamp":"2025-07-25T16:53:57.084Z"}
+{"destination":"Huye-Rusizi","level":"info","message":"Booking created and marked as paid","price":5000,"timestamp":"2025-07-25T16:54:55.528Z","userId":"68838d04fa3d13c827ab795a"}
+{"level":"warn","message":"Booking limit reached","timestamp":"2025-07-25T16:55:24.253Z","userId":"68838d04fa3d13c827ab795a"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-25T17:01:11.138Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-25T17:01:13.022Z"}
+{"email":"lea@gmail.com","level":"info","message":"User logged in","role":"student","timestamp":"2025-07-25T17:04:04.980Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-25T17:10:12.524Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-25T17:10:19.187Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-25T17:10:44.745Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-25T17:10:56.993Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-25T17:10:58.705Z"}
+{"level":"info","message":"Server running on port 5500","timestamp":"2025-07-25T17:13:39.776Z"}
+{"level":"info","message":"MongoDB connected","timestamp":"2025-07-25T17:13:42.724Z"}

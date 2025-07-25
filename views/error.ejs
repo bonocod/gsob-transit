@@ -3,23 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GSOB Transit - Error</title>
+  <title>Error - GSOB Transit</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: { primary: '#2563EB' }
+          colors: { primary: '#2563EB', gold: '#FFD700' }
         }
       }
     }
   </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 </head>
-<body class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
-  <div class="text-center">
-    <h1 class="text-6xl font-bold text-gray-900 mb-4"><%= (typeof error !== 'undefined' && error && error.status) ? error.status : 500 %></h1>
-    <p class="text-2xl text-gray-700 mb-6"><%= (typeof error !== 'undefined' && error && error.message) ? error.message : 'Something went wrong' %></p>
-    <a href="/" class="inline-block bg-primary text-white px-6 py-3 rounded hover:bg-blue-700 transition-colors duration-200">Go to Homepage</a>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100">
+  <header class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <a href="/" class="text-2xl font-bold text-primary">GSOB Transit</a>
+        <a href="/" class="text-gray-800 hover:text-primary transition-colors duration-200">Home</a>
+      </div>
+    </div>
+  </header>
+  <div class="container mx-auto mt-10 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center min-h-screen">
+    <i class="fas fa-exclamation-circle text-6xl sm:text-7xl text-red-500 mb-4"></i>
+    <h1 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4"><%= (typeof error !== 'undefined' && error && error.status) ? error.status : 500 %></h1>
+    <div class="bg-red-100 text-red-800 px-4 py-3 mb-6 rounded-lg border border-red-300 max-w-lg text-center">
+      <%= (typeof error !== 'undefined' && error && error.message) ? error.message : 'Something went wrong' %>
+    </div>
+    <a href="/" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">Go to Homepage</a>
   </div>
 </body>
 </html>
