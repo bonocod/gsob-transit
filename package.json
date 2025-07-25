@@ -9,12 +9,17 @@
     "clean-bookings": "node remove.js",
     "test": "jest"
   },
-  "keywords": ["transit", "booking", "student"],
+  "keywords": [
+    "transit",
+    "booking",
+    "student"
+  ],
   "author": "GSOB Team",
   "license": "ISC",
   "description": "A transit booking system for GSO Butare students",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
     "csurf": "^1.11.0",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
