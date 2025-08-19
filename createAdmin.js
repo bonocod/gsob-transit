@@ -15,16 +15,18 @@ const createAdmin = async () => {
       throw new Error('ADMIN_PASSWORD and ADMIN_EMAIL must be defined in .env');
     }
 
-    const existing = await User.findOne({ email: process.env.ADMIN_EMAIL });
+    const existing = await User.findOne({ email: 'dmin@gsobutare.rw'});
     if (existing) {
       logger.info('Admin already exists');
       return;
     }
 
-    const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 12);
+    const password = 'admin123';
+
+    const hashedPassword = await bcrypt.hash(password, 12);
     const admin = new User({
-      name: process.env.ADMIN_NAME || 'Admin',
-      email: process.env.ADMIN_EMAIL,
+      name: 'Admin',
+      email: 'admin@gsobutare.rw',
       password: hashedPassword,
       role: 'admin'
     });

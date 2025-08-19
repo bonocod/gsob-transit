@@ -339,3 +339,6 @@
 {"level":"info","message":"MongoDB connected","timestamp":"2025-07-25T17:10:58.705Z"}
 {"level":"info","message":"Server running on port 5500","timestamp":"2025-07-25T17:13:39.776Z"}
 {"level":"info","message":"MongoDB connected","timestamp":"2025-07-25T17:13:42.724Z"}
+{"level":"info","message":"Admin already exists","timestamp":"2025-08-19T04:24:37.240Z"}
+{"error":"User validation failed: name: Path `name` is required.","level":"error","message":"Failed to create admin","timestamp":"2025-08-19T04:26:58.422Z"}
+{"level":"info","message":"Admin created successfully","timestamp":"2025-08-19T04:31:00.811Z"}

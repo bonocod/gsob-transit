@@ -87,8 +87,19 @@
         <input type="date" id="date" name="date" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base"
                required aria-required="true" min="<%= new Date().toISOString().split('T')[0] %>">
       </div>
-      <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">Book Ticket</button>
+      <button id="id" type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">Book Ticket</button>
     </form>
   </div>
+  <script>
+    const submit = document.getElementById('id');
+    submit.addEventListener('click', function() {
+      
+        submit.disabled = true;
+        submit.textContent = 'Booking...';
+      
+       
+      
+    });
+  </script>
 </body>
 </html>
