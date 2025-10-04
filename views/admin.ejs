@@ -1,23 +1,31 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard - GSOB Transit</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<title>Admin Dashboard - GSOB Transit</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: { primary: '#2563EB', gold: '#FFD700' }
+}
+}
+}
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-  <div class="bg-white shadow-xl rounded-xl p-8 max-w-xl w-full">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Dashboard</h1>
-    <p class="text-gray-600 mb-6">Welcome, <span class="font-semibold"><%= user.name %></span> (<%= user.role %>)</p>
-    <div class="space-y-4">
-      <a href="/admin/summary" class="block text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-        📊 Manage Tickets & View Summary
-      </a>
-      <a href="/logout" class="block text-center bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
-        🔒 Logout
-      </a>
-    </div>
-  </div>
+<div class="bg-white shadow-xl rounded-xl p-8 max-w-xl w-full">
+<h1 class="text-3xl font-bold text-gray-800 mb-2">Admin Dashboard</h1>
+<p class="text-gray-600 mb-6">Welcome, <span class="font-semibold"><%= currentAdmin.name %></span> (Admin)</p>
+<div class="space-y-4">
+<a href="/admin/summary" class="block text-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+<i class="fas fa-ticket-alt mr-2"></i> Manage Tickets & View Summary
+</a>
+<a href="/auth/logout" class="block text-center bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+<i class="fas fa-sign-out-alt mr-2"></i> Logout
+</a>
+</div>
+</div>
 </body>
 </html>

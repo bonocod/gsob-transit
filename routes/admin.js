@@ -1,22 +1,15 @@
-// routes/admin.js
 const express = require('express');
-const adminController = require('../controllers/adminController');
 const router = express.Router();
+const adminController = require('../controllers/adminController');
+const isAdmin = require('../middleware/isAdmin');
 
-// Admin Dashboard and Summary
-router.get('/dashboard', adminController.dashboard);
-router.get('/summary', adminController.summary);
-
-// Booking Management
-router.get('/bookings', adminController.bookings);
-router.post('/bookings/:id/paid', adminController.markPaid);
-
-// Manage Promotions and Classes
-router.get('/manage/:promotion', adminController.manageClasses);
-router.get('/manage/:promotion/:group', adminController.classStudents);
-
-// CSV Exports
-router.get('/export/summary', adminController.exportSummary);
-router.get('/export/:promotion/:group', adminController.exportClassList);
+router.get('/dashboard', isAdmin, adminController.dashboard);
+router.get('/summary', isAdmin, adminController.summary);
+router.get('/bookings', isAdmin, adminController.bookings);
+router.get('/manage/:promotion', isAdmin, adminController.manageClasses);
+router.get('/manage/:promotion/:group', isAdmin, adminController.classStudents);
+router.get('/export-summary', isAdmin, adminController.exportSummary);
+router.get('/export/:promotion/:group', isAdmin, adminController.exportClassList);
+router.put('/bookings/:id/mark-paid', isAdmin, adminController.markPaid);
 
 module.exports = router;

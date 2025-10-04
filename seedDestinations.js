@@ -1,30 +1,28 @@
-require('dotenv').config();
 const mongoose = require('mongoose');
 const Destination = require('./models/Destination');
+const connectDB = require('./config/db');
 const logger = require('./config/logger');
+require('dotenv').config();
 
 const destinations = [
-  { name: 'Huye-Kigali', price: 3800 },
-  { name: 'Huye-Musanze', price: 4500 },
-  { name: 'Huye-Rusizi', price: 5000 },
-  { name: 'Huye-Muhanga', price: 4200 }
+  { name: 'Kigali', price: 5000 },
+  { name: 'Muhanga', price: 3000 },
+  { name: 'Huye', price: 7000 },
+  { name: 'Rusizi', price: 10000 },
+  { name: 'Musanze', price: 6000 }
 ];
 
-const seed = async () => {
+async function seed() {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
+    await connectDB();
     await Destination.deleteMany({});
     await Destination.insertMany(destinations);
-    logger.info('Destinations seeded successfully');
+    logger.info('Destinations seeded successfully', { timestamp: new Date().toISOString() });
+    process.exit(0);
   } catch (err) {
-    logger.error('Failed to seed destinations', { error: err.message });
-    throw err;
-  } finally {
-    await mongoose.disconnect();
+    logger.error('Error seeding destinations', { error: err.message });
+    process.exit(1);
   }
-};
+}
 
 seed();

@@ -1,94 +1,80 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book Ticket - GSOB Transit</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { primary: '#2563EB', gold: '#FFD700' }
-        }
-      }
-    }
-  </script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Ticket - GSOB Transit</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+theme: {
+extend: {
+colors: { primary: '#2563EB', gold: '#FFD700' }
+}
+}
+}
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
 </head>
 <body class="bg-gray-50">
-  <header class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <a href="/" class="text-2xl font-bold text-primary">GSOB Transit</a>
-        <a href="/" class="text-gray-800 hover:text-primary transition-colors duration-200">Home</a>
-      </div>
-    </div>
-  </header>
-  <div class="container mx-auto mt-10 px-4 sm:px-6 lg:px-8">
-    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Book Your Ticket</h2>
-    <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
-      <div role="alert" class="bg-red-100 text-red-800 px-4 py-3 mb-6 rounded-lg border border-red-300">
-        <%= errorMessage %>
-      </div>
-    <% } %>
-    <form action="/booking" method="POST" class="space-y-6 max-w-lg mx-auto" aria-label="Booking Form">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-        <input type="text" id="name" name="name" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= student && student.name ? student.name : '' %>" readonly aria-readonly="true">
-      </div>
-      <div>
-        <label for="promotion" class="block text-sm font-medium text-gray-700">Promotion</label>
-        <input type="text" id="promotion" name="promotion" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= student && student.promotion ? student.promotion : '' %>" readonly aria-readonly="true">
-      </div>
-      <% if (student && student.promotion && ['S1', 'S2', 'S3'].includes(student.promotion)) { %>
-        <div>
-          <label for="class" class="block text-sm font-medium text-gray-700">Class</label>
-          <select id="class" name="class" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base" required aria-required="true">
-            <option value="" <%= !student.class ? 'selected' : '' %>>Select Class</option>
-            <option value="A" <%= student.class === 'A' ? 'selected' : '' %>>A</option>
-            <option value="B" <%= student.class === 'B' ? 'selected' : '' %>>B</option>
-            <option value="C" <%= student.class === 'C' ? 'selected' : '' %>>C</option>
-            <option value="D" <%= student.class === 'D' ? 'selected' : '' %>>D</option>
-          </select>
-        </div>
-      <% } else if (student && student.promotion && ['S4', 'S5', 'S6'].includes(student.promotion)) { %>
-        <div>
-          <label for="combination" class="block text-sm font-medium text-gray-700">Combination</label>
-          <select id="combination" name="combination" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base" required aria-required="true">
-            <option value="" <%= !student.combination ? 'selected' : '' %>>Select Combination</option>
-            <option value="MPC" <%= student.combination === 'MPC' ? 'selected' : '' %>>MPC</option>
-            <option value="MCB" <%= student.combination === 'MCB' ? 'selected' : '' %>>MCB</option>
-            <option value="ANP" <%= student.combination === 'ANP' ? 'selected' : '' %>>ANP</option>
-            <option value="PCBa" <%= student.combination === 'PCBa' ? 'selected' : '' %>>PCBa</option>
-            <option value="PCBb" <%= student.combination === 'PCBb' ? 'selected' : '' %>>PCBb</option>
-            <option value="PCM" <%= student.combination === 'PCM' ? 'selected' : '' %>>PCM</option>
-          </select>
-        </div>
-      <% } %>
-      <div>
-        <label for="phoneNumber" class="block text-sm font-medium text-gray-700">Phone Number</label>
-        <input type="tel" id="phoneNumber" name="phoneNumber" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base"
-               required aria-required="true" placeholder="e.g., +250 123 456 789">
-      </div>
-      <div>
-        <label for="destination" class="block text-sm font-medium text-gray-700">Destination</label>
-        <select id="destination" name="destination" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base"
-                required aria-required="true">
-          <option value="">Select Destination</option>
-          <% destinations.forEach(dest => { %>
-            <option value="<%= dest._id %>"><%= dest.name %> - <%= dest.price %> RWF</option>
-          <% }) %>
-        </select>
-      </div>
-      <div>
-        <label for="date" class="block text-sm font-medium text-gray-700">Travel Date</label>
-        <input type="date" id="date" name="date" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base"
-               required aria-required="true" min="<%= new Date().toISOString().split('T')[0] %>">
-      </div>
-      <button id="id" type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">Book Ticket</button>
-    </form>
-  </div>
+<header class="bg-white shadow-md sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center h-16">
+<a href="/" class="text-2xl font-bold text-primary">GSOB Transit</a>
+<a href="/" class="text-gray-800 hover:text-primary transition-colors duration-200">Home</a>
+</div>
+</div>
+</header>
+<div class="container mx-auto mt-10 px-4 sm:px-6 lg:px-8">
+<h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Book Your Ticket</h2>
+<% if (errorMessage) { %>
+<div role="alert" class="bg-red-100 text-red-800 px-4 py-3 mb-6 rounded-lg border border-red-300">
+<%= errorMessage %>
+</div>
+<% } %>
+<% if (existingBooking) { %>
+<div class="bg-green-100 text-green-800 px-4 py-3 mb-6 rounded-lg border border-green-300">
+You have already bought a ticket. Details: <%= existingBooking.destination %> for <%= existingBooking.price %> RWF.
+</div>
+<% } else { %>
+<form action="/booking" method="POST" class="space-y-6 max-w-lg mx-auto" aria-label="Booking Form">
+<input type="hidden" name="_csrf" value="<%= csrfToken %>">
+<div>
+<label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+<input type="text" id="name" name="name" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= currentStudent.name %>" readonly aria-readonly="true">
+</div>
+<div>
+<label for="promotion" class="block text-sm font-medium text-gray-700">Promotion</label>
+<input type="text" id="promotion" name="promotion" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= currentStudent.promotion %>" readonly aria-readonly="true">
+</div>
+<% if (['S1', 'S2', 'S3'].includes(currentStudent.promotion)) { %>
+<div>
+<label for="class" class="block text-sm font-medium text-gray-700">Class</label>
+<input type="text" id="class" name="class" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= currentStudent.class %>" readonly aria-readonly="true">
+</div>
+<% } else { %>
+<div>
+<label for="combination" class="block text-sm font-medium text-gray-700">Combination/Stream</label>
+<input type="text" id="combination" name="combination" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= currentStudent.combination %>" readonly aria-readonly="true">
+</div>
+<% } %>
+<div>
+<label for="phoneNumber" class="block text-sm font-medium text-gray-700">MTN Mobile Number</label>
+<input type="tel" id="phoneNumber" name="phoneNumber" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base"
+required aria-required="true" placeholder="e.g., 25078xxxxxxx">
+</div>
+<div>
+<label for="destination" class="block text-sm font-medium text-gray-700">Destination</label>
+<select id="destination" name="destination" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base"
+required aria-required="true">
+<option value="">Select Destination</option>
+<% destinations.forEach(dest => { %>
+<option value="<%= dest._id %>"><%= dest.name %> - <%= dest.price %> RWF</option>
+<% }) %>
+</select>
+</div>
+<button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">Pay with MTN MoMo</button>
+</form>
+<% } %>
+</div>
 </body>
 </html>

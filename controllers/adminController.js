@@ -1,11 +1,10 @@
-// controllers/adminController.js
 const Booking = require('../models/Booking');
 const Student = require('../models/Student');
 const logger = require('../config/logger');
 const { Parser } = require('json2csv');
 
 exports.dashboard = (req, res) => {
-  res.render('admin', { user: req.session.user });
+  res.render('admin', { user: req.session.admin });
 };
 
 exports.summary = async (req, res) => {
@@ -15,12 +14,12 @@ exports.summary = async (req, res) => {
       {
         $lookup: {
           from: 'students',
-          localField: 'user',
-          foreignField: 'user',
+          localField: 'student',
+          foreignField: '_id',
           as: 'studentData'
         }
       },
-      { $unwind: '$studentData' },
+      { $unwind: { path: '$studentData', preserveNullAndEmptyArrays: true } }, // Preserve null if no match
       {
         $group: {
           _id: {
@@ -36,15 +35,15 @@ exports.summary = async (req, res) => {
 
     const grouped = {};
     bookingsByPromoDest.forEach(item => {
-      const { promotion, destination } = item._id;
+      const { promotion, destination } = item._id || { promotion: null, destination: null };
       if (!grouped[destination]) grouped[destination] = { numberOfStudents: 0, totalPaid: 0 };
       grouped[destination].numberOfStudents += item.numberOfStudents;
       grouped[destination].totalPaid += item.totalPaid;
     });
 
     const destinationSummary = bookingsByPromoDest.map(item => ({
-      promotion: item._id.promotion,
-      destination: item._id.destination,
+      promotion: item._id?.promotion || 'Unknown',
+      destination: item._id?.destination || 'Unknown',
       numberOfStudents: item.numberOfStudents,
       totalPaid: item.totalPaid
     }));
@@ -59,7 +58,7 @@ exports.summary = async (req, res) => {
     });
 
     res.render('admin-summary', {
-      user: req.session.user,
+      user: req.session.admin,
       destinationSummary
     });
   } catch (err) {
@@ -70,8 +69,8 @@ exports.summary = async (req, res) => {
 
 exports.bookings = async (req, res) => {
   try {
-    const bookings = await Booking.find().populate('user');
-    res.render('admin-bookings', { user: req.session.user, bookings });
+    const bookings = await Booking.find().populate('student');
+    res.render('admin-bookings', { user: req.session.admin, bookings });
   } catch (err) {
     logger.error('Failed to load bookings', { error: err.message });
     res.status(500).render('error', { error: err, message: 'Failed to load bookings' });
@@ -100,8 +99,12 @@ exports.manageClasses = (req, res) => {
   let items;
   if (['S1', 'S2', 'S3'].includes(promotion)) {
     items = ['A', 'B', 'C', 'D'];
-  } else if (['S4', 'S5', 'S6'].includes(promotion)) {
-    items = ['MPC', 'MCB', 'ANP', 'PCBa', 'PCBb', 'PCM'];
+  } else if (promotion === 'S4') {
+    items = ['MS1A', 'MS1B', 'MS1C', 'MS12'];
+  } else if (promotion === 'S5') {
+    items = ['anp', 'mcb', 'mpc', 'pcm', 'PCBA', 'PCBB'];
+  } else if (promotion === 'S6') {
+    items = ['anp', 'mcb', 'mpc', 'pcm', 'PCBa', 'PCBb', 'PCBc'];
   } else {
     return res.status(400).render('error', { message: 'Invalid promotion' });
   }
@@ -120,20 +123,20 @@ exports.classStudents = async (req, res) => {
       query.combination = group;
     }
 
-    const students = await Student.find(query).populate('user');
-    const userIds = students.map(s => s.user?._id).filter(Boolean);
-    const bookings = await Booking.find({ user: { $in: userIds } });
+    const students = await Student.find(query);
+    const studentIds = students.map(s => s._id);
+    const bookings = await Booking.find({ student: { $in: studentIds } });
 
     const bookingMap = {};
     bookings.forEach(b => {
-      bookingMap[b.user.toString()] = b;
+      bookingMap[b.student.toString()] = b;
     });
 
     const studentData = students.map(s => {
-      const booking = bookingMap[s.user?._id?.toString() || ''];
+      const booking = bookingMap[s._id.toString()];
       return {
         name: s.name,
-        urubutoCode: s.urubutoCode,
+        studentCode: s.studentCode,
         destination: booking?.destination || null,
         hasBooking: !!booking,
         bookedAt: booking?.bookedAt || null,
@@ -146,7 +149,7 @@ exports.classStudents = async (req, res) => {
     const unpaidCount = total - paidCount;
 
     res.render('class-student-list', {
-      user: req.session.user,
+      user: req.session.admin,
       promotion,
       className: group,
       students: studentData,
@@ -167,12 +170,12 @@ exports.exportSummary = async (req, res) => {
       {
         $lookup: {
           from: 'students',
-          localField: 'user',
-          foreignField: 'user',
+          localField: 'student',
+          foreignField: '_id',
           as: 'studentData'
         }
       },
-      { $unwind: '$studentData' },
+      { $unwind: { path: '$studentData', preserveNullAndEmptyArrays: true } },
       {
         $group: {
           _id: {
@@ -188,15 +191,15 @@ exports.exportSummary = async (req, res) => {
 
     const grouped = {};
     bookingsByPromoDest.forEach(item => {
-      const { promotion, destination } = item._id;
+      const { promotion, destination } = item._id || { promotion: null, destination: null };
       if (!grouped[destination]) grouped[destination] = { numberOfStudents: 0, totalPaid: 0 };
       grouped[destination].numberOfStudents += item.numberOfStudents;
       grouped[destination].totalPaid += item.totalPaid;
     });
 
     const destinationSummary = bookingsByPromoDest.map(item => ({
-      promotion: item._id.promotion,
-      destination: item._id.destination,
+      promotion: item._id?.promotion || 'Unknown',
+      destination: item._id?.destination || 'Unknown',
       Students: item.numberOfStudents,
       TotalPaid: item.totalPaid
     }));
@@ -240,24 +243,26 @@ exports.exportClassList = async (req, res) => {
     }
 
     const students = await Student.find(query);
-    const userIds = students.map(s => s.user).filter(Boolean);
-    const bookings = await Booking.find({ user: { $in: userIds } });
+    const studentIds = students.map(s => s._id);
+    const bookings = await Booking.find({ student: { $in: studentIds } });
 
     const csvData = students.map(s => {
-      const booking = bookings.find(b => b.user.toString() === (s.user || '').toString());
+      const booking = bookings.find(b => b.student.toString() === s._id.toString());
       return {
         Name: s.name,
-        Urubuto: s.urubutoCode,
-        Destination: booking ? booking.destination : '',
-        Status: booking ? booking.status : 'Not Paid'
+        StudentCode: s.studentCode,
+        Destination: booking ? booking.destination : '-',
+        Status: booking ? booking.status : 'Not Paid',
+        BookedAt: booking ? new Date(booking.bookedAt).toLocaleString() : '-'
       };
     });
 
     const fields = [
       { label: 'Name', value: 'Name' },
-      { label: 'Urubuto Code', value: 'Urubuto' },
+      { label: 'Student Code', value: 'StudentCode' },
       { label: 'Destination', value: 'Destination' },
-      { label: 'Status', value: 'Status' }
+      { label: 'Status', value: 'Status' },
+      { label: 'Booked At', value: 'BookedAt' }
     ];
     const parser = new Parser({ fields });
     const csv = parser.parse(csvData);

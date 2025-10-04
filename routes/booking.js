@@ -1,13 +1,8 @@
 const express = require('express');
-const { validate, schemas } = require('../middleware/validate');
 const bookingController = require('../controllers/bookingController');
-
 const router = express.Router();
-
-// Show booking form
+// Show booking form or details
 router.get('/', bookingController.getBooking);
-
 // Handle booking submission
-router.post('/', validate(schemas.booking), bookingController.createBooking);
-
+router.post('/', bookingController.createBooking);
 module.exports = router;

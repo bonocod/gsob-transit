@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Student - GSOB Transit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: '#2563EB', gold: '#FFD700' }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center min-h-screen">
+  <div class="max-w-md w-full bg-white p-6 sm:p-8 rounded-lg shadow-lg text-center">
+    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Is This You?</h2>
+    <p class="text-lg text-gray-700 mb-8">This code is linked to: <span class="font-semibold"><%= student.name %></span> (<%= student.promotion %> <%= student.class || student.combination %>)</p>
+    <% if (typeof existingBooking !== 'undefined' && existingBooking) { %>
+      <div class="bg-green-100 text-green-800 px-4 py-3 mb-6 rounded-lg border border-green-300">
+        You have already bought a ticket: <%= existingBooking.destination %> for <%= existingBooking.price %> RWF.
+      </div>
+    <% } %>
+    <form action="/student/confirm-student" method="POST" class="space-y-4">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="studentId" value="<%= student._id %>">
+      <button type="submit" name="confirm" value="yes" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">
+        Yes, Continue
+      </button>
+      <button type="submit" name="confirm" value="no" class="w-full bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition-colors duration-200 text-lg font-semibold">
+        No, Enter Another Code
+      </button>
+    </form>
+  </div>
+</body>
+</html>

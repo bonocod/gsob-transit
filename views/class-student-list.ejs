@@ -1,3 +1,4 @@
+<!-- FILE: views/class-student-list.ejs -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,6 +20,7 @@
         <tr>
           <th>#</th>
           <th>Name</th>
+          <th>Student Code</th>
           <th>Status</th>
           <th>Destination</th>
           <th>Booked At</th>
@@ -29,6 +31,7 @@
           <tr>
             <td><%= i + 1 %></td>
             <td><%= s.name %></td>
+            <td><%= s.studentCode %></td>
             <td>
               <% if (s.paid) { %>
                 <span class="text-success">&#10004;</span>
@@ -36,8 +39,8 @@
                 <span class="text-danger">&#10008;</span>
               <% } %>
             </td>
-            <td><%= s.paid ? s.destination : '—' %></td>
-            <td><%= s.paid ? new Date(s.bookedAt).toLocaleString() : '—' %></td>
+            <td><%= s.destination || '—' %></td>
+            <td><%= s.bookedAt ? new Date(s.bookedAt).toLocaleString() : '—' %></td>
           </tr>
         <% }) %>
       </tbody>

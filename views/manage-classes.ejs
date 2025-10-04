@@ -1,3 +1,4 @@
+<!-- FILE: views/manage-classes.ejs -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,7 @@
   <div class="container mt-5">
 
     <h2>Promotion: <%= promotion %></h2>
-    <p>Select a <%= ['S1','S2','S3'].includes(promotion) ? 'Class' : 'Combination' %>:</p>
+    <p>Select a <%= ['S1','S2','S3'].includes(promotion) ? 'Class' : 'Combination/Stream' %>:</p>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <% items.forEach(item => { %>
