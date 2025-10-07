@@ -1,184 +1,65 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
+const fs = require('fs');
 const Student = require('./models/Student');
 const logger = require('./config/logger');
-const s6Students = [
-{'name': 'ABATONI CATHERINE', 'combination': 'anp', 'studentCode': '6001', 'promotion': 'S6', '_id': 'S6001'},
-{'name': 'BUNANI ORIGENE', 'combination': 'anp', 'studentCode': '6002', 'promotion': 'S6', '_id': 'S6002'},
-{'name': 'BYIRINGIRO VENANT', 'combination': 'anp', 'studentCode': '6003', 'promotion': 'S6', '_id': 'S6003'},
-{'name': 'CYUZUZO BORIS', 'combination': 'anp', 'studentCode': '6004', 'promotion': 'S6', '_id': 'S6004'},
-{'name': 'CYUZUZO THARCILLE', 'combination': 'anp', 'studentCode': '6005', 'promotion': 'S6', '_id': 'S6005'},
-{'name': 'CYUZUZO GASAGURE AUGUSTIN', 'combination': 'anp', 'studentCode': '6006', 'promotion': 'S6', '_id': 'S6006'},
-{'name': 'GUSENGA FILS', 'combination': 'anp', 'studentCode': '6007', 'promotion': 'S6', '_id': 'S6007'},
-{'name': 'HIRWA AIME PRINCE', 'combination': 'anp', 'studentCode': '6008', 'promotion': 'S6', '_id': 'S6008'},
-{'name': 'ISHIMWE AIME FILS', 'combination': 'anp', 'studentCode': '6009', 'promotion': 'S6', '_id': 'S6009'},
-{'name': 'ISHIMWE GIKUNDIRO BELYSE', 'combination': 'anp', 'studentCode': '6010', 'promotion': 'S6', '_id': 'S6010'},
-{'name': 'ITANGIMIGISHA SAMUEL', 'combination': 'anp', 'studentCode': '6011', 'promotion': 'S6', '_id': 'S6011'},
-{'name': 'KWIZERA CLEVER', 'combination': 'anp', 'studentCode': '6012', 'promotion': 'S6', '_id': 'S6012'},
-{'name': 'MANIRUMVA VALENS', 'combination': 'anp', 'studentCode': '6013', 'promotion': 'S6', '_id': 'S6013'},
-{'name': 'MICOMYIZA EMERTON', 'combination': 'anp', 'studentCode': '6014', 'promotion': 'S6', '_id': 'S6014'},
-{'name': 'MUGISHA JAMES', 'combination': 'anp', 'studentCode': '6015', 'promotion': 'S6', '_id': 'S6015'},
-{'name': 'MUKAMWEZI JUDITH', 'combination': 'anp', 'studentCode': '6016', 'promotion': 'S6', '_id': 'S6016'},
-{'name': 'MUTUYIMANA JULIENNE', 'combination': 'anp', 'studentCode': '6017', 'promotion': 'S6', '_id': 'S6017'},
-{'name': 'NASHIMWE MUSANGWA NANCY', 'combination': 'anp', 'studentCode': '6018', 'promotion': 'S6', '_id': 'S6018'},
-{'name': 'NDATUJE JEAN DE DIEU', 'combination': 'anp', 'studentCode': '6019', 'promotion': 'S6', '_id': 'S6019'},
-{'name': 'NDAYISENGA EMMANUEL', 'combination': 'anp', 'studentCode': '6020', 'promotion': 'S6', '_id': 'S6020'},
-{'name': 'NGENDAHIMANA BENJAMIN', 'combination': 'anp', 'studentCode': '6021', 'promotion': 'S6', '_id': 'S6021'},
-{'name': 'NIYIREMA MUGISHA PRINCE', 'combination': 'anp', 'studentCode': '6022', 'promotion': 'S6', '_id': 'S6022'},
-{'name': 'NIYOGUSHIMWA CEDRIC', 'combination': 'anp', 'studentCode': '6023', 'promotion': 'S6', '_id': 'S6023'},
-{'name': 'NIYONSHUTI PATRICK', 'combination': 'anp', 'studentCode': '6024', 'promotion': 'S6', '_id': 'S6024'},
-{'name': 'NSABIMANA JEAN CLAUDE', 'combination': 'anp', 'studentCode': '6025', 'promotion': 'S6', '_id': 'S6025'},
-{'name': 'NZIYIGIHE HERVE', 'combination': 'anp', 'studentCode': '6026', 'promotion': 'S6', '_id': 'S6026'},
-{'name': 'SANO JACQUELINE', 'combination': 'anp', 'studentCode': '6027', 'promotion': 'S6', '_id': 'S6027'},
-{'name': 'UTATSINEZA KAMUGISHA AMINA', 'combination': 'anp', 'studentCode': '6028', 'promotion': 'S6', '_id': 'S6028'},
-{'name': 'UWASE CADETTE GUELLA', 'combination': 'anp', 'studentCode': '6029', 'promotion': 'S6', '_id': 'S6029'},
-{'name': 'UWIJURU MARIE CARINE', 'combination': 'anp', 'studentCode': '6030', 'promotion': 'S6', '_id': 'S6030'},
-{'name': 'UWIMANA CLARISSE', 'combination': 'anp', 'studentCode': '6031', 'promotion': 'S6', '_id': 'S6031'},
-{'name': 'UWITONZE ALBINE', 'combination': 'anp', 'studentCode': '6032', 'promotion': 'S6', '_id': 'S6032'},
-{'name': 'YABARAGIYE CHRISTELLA', 'combination': 'anp', 'studentCode': '6033', 'promotion': 'S6', '_id': 'S6033'},
-{'name': 'ASHIMWE GIKUNDIRO AUREA', 'combination': 'mcb', 'studentCode': '6034', 'promotion': 'S6', '_id': 'S6034'},
-{'name': 'BYUSA AUGUSTIN', 'combination': 'mcb', 'studentCode': '6035', 'promotion': 'S6', '_id': 'S6035'},
-{'name': 'CYIZA RUDASINGWA GISELE', 'combination': 'mcb', 'studentCode': '6036', 'promotion': 'S6', '_id': 'S6036'},
-{'name': 'DUSHIMIMANA Jean D Amour', 'combination': 'mcb', 'studentCode': '6037', 'promotion': 'S6', '_id': 'S6037'},
-{'name': 'GIRASO JEAN PATRICK', 'combination': 'mcb', 'studentCode': '6038', 'promotion': 'S6', '_id': 'S6038'},
-{'name': 'HAKIZIMANA SAMSON', 'combination': 'mcb', 'studentCode': '6039', 'promotion': 'S6', '_id': 'S6039'},
-{'name': 'HIRWA ELOI', 'combination': 'mcb', 'studentCode': '6040', 'promotion': 'S6', '_id': 'S6040'},
-{'name': 'IGIRANEZA HADASSA', 'combination': 'mcb', 'studentCode': '6041', 'promotion': 'S6', '_id': 'S6041'},
-{'name': 'IRADUKUNDA MARIE ROSE', 'combination': 'mcb', 'studentCode': '6042', 'promotion': 'S6', '_id': 'S6042'},
-{'name': 'IRADUKUNDA EGIDE', 'combination': 'mcb', 'studentCode': '6043', 'promotion': 'S6', '_id': 'S6043'},
-{'name': 'IRADUKUNDA PATRICK', 'combination': 'mcb', 'studentCode': '6044', 'promotion': 'S6', '_id': 'S6044'},
-{'name': 'IRADUKUNDA NTWALI HERTIER', 'combination': 'mcb', 'studentCode': '6045', 'promotion': 'S6', '_id': 'S6045'},
-{'name': 'ISIMBI STELLA', 'combination': 'mcb', 'studentCode': '6046', 'promotion': 'S6', '_id': 'S6046'},
-{'name': 'MANISHIMWE QUEEN NICOLE', 'combination': 'mcb', 'studentCode': '6047', 'promotion': 'S6', '_id': 'S6047'},
-{'name': 'MANISHIMWE JEAN DE DIEU', 'combination': 'mcb', 'studentCode': '6048', 'promotion': 'S6', '_id': 'S6048'},
-{'name': 'MBABAZI LILIANE', 'combination': 'mcb', 'studentCode': '6049', 'promotion': 'S6', '_id': 'S6049'},
-{'name': 'MPANO NSHONGORE HERVE', 'combination': 'mcb', 'studentCode': '6050', 'promotion': 'S6', '_id': 'S6050'},
-{'name': 'MUGENI UWASE CALINE', 'combination': 'mcb', 'studentCode': '6051', 'promotion': 'S6', '_id': 'S6051'},
-{'name': 'MUGISHA PATERNE', 'combination': 'mcb', 'studentCode': '6052', 'promotion': 'S6', '_id': 'S6052'},
-{'name': 'MUGISHA SIMPLICE', 'combination': 'mcb', 'studentCode': '6053', 'promotion': 'S6', '_id': 'S6053'},
-{'name': 'MUGISHA MUSA', 'combination': 'mcb', 'studentCode': '6054', 'promotion': 'S6', '_id': 'S6054'},
-{'name': 'MUKIZA SHEJA YVAN', 'combination': 'mcb', 'studentCode': '6055', 'promotion': 'S6', '_id': 'S6055'},
-{'name': 'MUKUNDENTE BRICE', 'combination': 'mcb', 'studentCode': '6056', 'promotion': 'S6', '_id': 'S6056'},
-{'name': 'MWARINKUNDA BENITHA', 'combination': 'mcb', 'studentCode': '6057', 'promotion': 'S6', '_id': 'S6057'},
-{'name': 'NAMBAJIMANA HIRWA PROSPER', 'combination': 'mcb', 'studentCode': '6058', 'promotion': 'S6', '_id': 'S6058'},
-{'name': 'NDAMUKUNDA LOUANGE DEI GLORIA', 'combination': 'mcb', 'studentCode': '6059', 'promotion': 'S6', '_id': 'S6059'},
-{'name': 'NIYIGENA ELIZABETI', 'combination': 'mcb', 'studentCode': '6060', 'promotion': 'S6', '_id': 'S6060'},
-{'name': 'NIYOGISUBIZO GENTILLE', 'combination': 'mcb', 'studentCode': '6061', 'promotion': 'S6', '_id': 'S6061'},
-{'name': 'NIYONKURU RWANDANGA PRINCE', 'combination': 'mcb', 'studentCode': '6062', 'promotion': 'S6', '_id': 'S6062'},
-{'name': 'NIYONSENGA SOLANGE', 'combination': 'mcb', 'studentCode': '6063', 'promotion': 'S6', '_id': 'S6063'},
-{'name': 'NIYONZIMA ALLY', 'combination': 'mcb', 'studentCode': '6064', 'promotion': 'S6', '_id': 'S6064'},
-{'name': 'NSENGIYUMVA SHEMA QUENTIN', 'combination': 'mcb', 'studentCode': '6065', 'promotion': 'S6', '_id': 'S6065'},
-{'name': 'NSHIMYUMUREMYI AIME', 'combination': 'mcb', 'studentCode': '6066', 'promotion': 'S6', '_id': 'S6066'},
-{'name': 'NSHUTI CHRISTIAN', 'combination': 'mcb', 'studentCode': '6067', 'promotion': 'S6', '_id': 'S6067'},
-{'name': 'NTWALI NGABO TETO BENOIT', 'combination': 'mcb', 'studentCode': '6068', 'promotion': 'S6', '_id': 'S6068'},
-{'name': 'NYOMBAYIRE EDDY ARTIMO', 'combination': 'mcb', 'studentCode': '6069', 'promotion': 'S6', '_id': 'S6069'},
-{'name': 'REMEZO TONY ACHILLE', 'combination': 'mcb', 'studentCode': '6070', 'promotion': 'S6', '_id': 'S6070'},
-{'name': 'RUDASINGWA CYUSA VAINQUEUR', 'combination': 'mcb', 'studentCode': '6071', 'promotion': 'S6', '_id': 'S6071'},
-{'name': 'SANGWA JOY ARLETTE', 'combination': 'mcb', 'studentCode': '6072', 'promotion': 'S6', '_id': 'S6072'},
-{'name': 'SHYAKA BRUNO', 'combination': 'mcb', 'studentCode': '6073', 'promotion': 'S6', '_id': 'S6073'},
-{'name': 'TWIZERIMANA VELAN', 'combination': 'mcb', 'studentCode': '6074', 'promotion': 'S6', '_id': 'S6074'},
-{'name': 'UWAMAHORO ANITHA', 'combination': 'mcb', 'studentCode': '6075', 'promotion': 'S6', '_id': 'S6075'},
-{'name': 'UWAMURUTASATE MIREILLE', 'combination': 'mcb', 'studentCode': '6076', 'promotion': 'S6', '_id': 'S6076'},
-{'name': 'UWIMANA CHANELLA', 'combination': 'mcb', 'studentCode': '6077', 'promotion': 'S6', '_id': 'S6077'},
-{'name': 'UWIMPUHWE LILIANE', 'combination': 'mcb', 'studentCode': '6078', 'promotion': 'S6', '_id': 'S6078'},
-{'name': 'UWINTIJE MARIE GRACE', 'combination': 'mcb', 'studentCode': '6079', 'promotion': 'S6', '_id': 'S6079'},
-{'name': 'ABAHUJIMANA DIDIER', 'combination': 'mpc', 'studentCode': '6080', 'promotion': 'S6', '_id': 'S6080'},
-{'name': 'BRIGHT FAIDA SAMUEL', 'combination': 'mpc', 'studentCode': '6081', 'promotion': 'S6', '_id': 'S6081'},
-{'name': 'CYIMANA SALIF KEITA', 'combination': 'mpc', 'studentCode': '6082', 'promotion': 'S6', '_id': 'S6082'},
-{'name': 'GAJU MAUREEN', 'combination': 'mpc', 'studentCode': '6083', 'promotion': 'S6', '_id': 'S6083'},
-{'name': 'GANZA SHEMA ARNOLD', 'combination': 'mpc', 'studentCode': '6084', 'promotion': 'S6', '_id': 'S6084'},
-{'name': 'GATETE ISMAEL', 'combination': 'mpc', 'studentCode': '6085', 'promotion': 'S6', '_id': 'S6085'},
-{'name': 'GISUBIZO JOSIANE', 'combination': 'mpc', 'studentCode': '6086', 'promotion': 'S6', '_id': 'S6086'},
-{'name': 'GISUBIZO SHEMA PRINCE', 'combination': 'mpc', 'studentCode': '6087', 'promotion': 'S6', '_id': 'S6087'},
-{'name': 'HIRWA GABRY BELDEN', 'combination': 'mpc', 'studentCode': '6088', 'promotion': 'S6', '_id': 'S6088'},
-{'name': 'IGIKUNDIRO MUGENI KELLIA', 'combination': 'mpc', 'studentCode': '6089', 'promotion': 'S6', '_id': 'S6089'},
-{'name': 'IHIRWE NGABO BENI', 'combination': 'mpc', 'studentCode': '6090', 'promotion': 'S6', '_id': 'S6090'},
-{'name': 'IMANANIBYOSE CHRISTELLA', 'combination': 'mpc', 'studentCode': '6091', 'promotion': 'S6', '_id': 'S6091'},
-{'name': 'INEZA DOLINE', 'combination': 'mpc', 'studentCode': '6092', 'promotion': 'S6', '_id': 'S6092'},
-{'name': 'INEZA GIRAMATA HOPE', 'combination': 'mpc', 'studentCode': '6093', 'promotion': 'S6', '_id': 'S6093'},
-{'name': 'INGABIRE TETA AURORE', 'combination': 'mpc', 'studentCode': '6094', 'promotion': 'S6', '_id': 'S6094'},
-{'name': 'INTWARI BONHEUR', 'combination': 'mpc', 'studentCode': '6095', 'promotion': 'S6', '_id': 'S6095'},
-{'name': 'IRASUBIZA BENI', 'combination': 'mpc', 'studentCode': '6096', 'promotion': 'S6', '_id': 'S6096'},
-{'name': 'IRASUBIZA KEVINE', 'combination': 'mpc', 'studentCode': '6097', 'promotion': 'S6', '_id': 'S6097'},
-{'name': 'IRUMVA MUGISHA HUGUES', 'combination': 'mpc', 'studentCode': '6098', 'promotion': 'S6', '_id': 'S6098'},
-{'name': 'ITANGANEZA MAHORO DEBORAH', 'combination': 'mpc', 'studentCode': '6099', 'promotion': 'S6', '_id': 'S6099'},
-{'name': 'IYUMVA ASIFIWE BENI', 'combination': 'mpc', 'studentCode': '6100', 'promotion': 'S6', '_id': 'S6100'},
-{'name': 'IZABAYO YVES', 'combination': 'mpc', 'studentCode': '6101', 'promotion': 'S6', '_id': 'S6101'},
-{'name': 'JAMBO NGOGA PRIME', 'combination': 'mpc', 'studentCode': '6102', 'promotion': 'S6', '_id': 'S6102'},
-{'name': 'KWIZERA ENOCK', 'combination': 'mpc', 'studentCode': '6103', 'promotion': 'S6', '_id': 'S6103'},
-{'name': 'KWIZERA IRAKOZE DIVIN', 'combination': 'mpc', 'studentCode': '6104', 'promotion': 'S6', '_id': 'S6104'},
-{'name': 'MANIRAKIZA CEDRICK', 'combination': 'mpc', 'studentCode': '6105', 'promotion': 'S6', '_id': 'S6105'},
-{'name': 'MANZI AIME PATRICK', 'combination': 'mpc', 'studentCode': '6106', 'promotion': 'S6', '_id': 'S6106'},
-{'name': 'MFURAYASE MUCYO JONATHAN', 'combination': 'mpc', 'studentCode': '6107', 'promotion': 'S6', '_id': 'S6107'},
-{'name': 'MPANO BENJAMIN', 'combination': 'mpc', 'studentCode': '6108', 'promotion': 'S6', '_id': 'S6108'},
-{'name': 'MUCYO ELYSEE', 'combination': 'mpc', 'studentCode': '6109', 'promotion': 'S6', '_id': 'S6109'},
-{'name': 'MUGISHA FRANK', 'combination': 'mpc', 'studentCode': '6110', 'promotion': 'S6', '_id': 'S6110'},
-{'name': 'MUGISHA GANZA JOSUE', 'combination': 'mpc', 'studentCode': '6111', 'promotion': 'S6', '_id': 'S6111'},
-{'name': 'MUGISHA IRAKOZE DAVID', 'combination': 'mpc', 'studentCode': '6112', 'promotion': 'S6', '_id': 'S6112'},
-{'name': 'MUKWIZERA ENOCK', 'combination': 'mpc', 'studentCode': '6113', 'promotion': 'S6', '_id': 'S6113'},
-{'name': 'MUNYANEZA MUCYO AXCEL', 'combination': 'mpc', 'studentCode': '6114', 'promotion': 'S6', '_id': 'S6114'},
-{'name': 'MUSO GLOIRE ALVE', 'combination': 'mpc', 'studentCode': '6115', 'promotion': 'S6', '_id': 'S6115'},
-{'name': 'MUTESI YUSIRA', 'combination': 'mpc', 'studentCode': '6116', 'promotion': 'S6', '_id': 'S6116'},
-{'name': 'NAKINTIJE RUKUNDO MYSTIQUE', 'combination': 'mpc', 'studentCode': '6117', 'promotion': 'S6', '_id': 'S6117'},
-{'name': 'NDIZIHIWE RENE', 'combination': 'mpc', 'studentCode': '6118', 'promotion': 'S6', '_id': 'S6118'},
-{'name': 'NIWE HOPE KEY', 'combination': 'mpc', 'studentCode': '6119', 'promotion': 'S6', '_id': 'S6119'},
-{'name': 'NIYOBYOSE OBED', 'combination': 'mpc', 'studentCode': '6120', 'promotion': 'S6', '_id': 'S6120'},
-{'name': 'NIYOMUGABO PRINCE', 'combination': 'mpc', 'studentCode': '6121', 'promotion': 'S6', '_id': 'S6121'},
-{'name': 'NKUSI ASHELY', 'combination': 'mpc', 'studentCode': '6122', 'promotion': 'S6', '_id': 'S6122'},
-{'name': 'RUGWIRO ARCADE', 'combination': 'mpc', 'studentCode': '6123', 'promotion': 'S6', '_id': 'S6123'},
-{'name': 'SHIMIRWA HONORE', 'combination': 'mpc', 'studentCode': '6124', 'promotion': 'S6', '_id': 'S6124'},
-{'name': 'SHIMWA UWACU NISA', 'combination': 'mpc', 'studentCode': '6125', 'promotion': 'S6', '_id': 'S6125'},
-{'name': 'TUYIHIMBAZE BONHEUR', 'combination': 'mpc', 'studentCode': '6126', 'promotion': 'S6', '_id': 'S6126'},
-{'name': 'UDAHEMUKA ROGER JOHNSON', 'combination': 'mpc', 'studentCode': '6127', 'promotion': 'S6', '_id': 'S6127'},
-{'name': 'UHIRIWE BEGAS LANDRY', 'combination': 'mpc', 'studentCode': '6128', 'promotion': 'S6', '_id': 'S6128'},
-{'name': 'AKAYO MIGISHA FABIOLA', 'combination': 'pcm', 'studentCode': '6129', 'promotion': 'S6', '_id': 'S6129'},
-{'name': 'AKOBAKUNDA BEATRICE', 'combination': 'pcm', 'studentCode': '6130', 'promotion': 'S6', '_id': 'S6130'},
-{'name': 'BUTERA INTIME BERNIQUE', 'combination': 'pcm', 'studentCode': '6131', 'promotion': 'S6', '_id': 'S6131'},
-{'name': 'CYUSA ARMAND JEAN PAUL', 'combination': 'pcm', 'studentCode': '6132', 'promotion': 'S6', '_id': 'S6132'},
-{'name': 'GIRANEZA ISHIMWE DEBORAH', 'combination': 'pcm', 'studentCode': '6133', 'promotion': 'S6', '_id': 'S6133'},
-{'name': 'HAKORIMANA EMILE', 'combination': 'pcm', 'studentCode': '6134', 'promotion': 'S6', '_id': 'S6134'},
-{'name': 'HIRWA SHEMA BEACON', 'combination': 'pcm', 'studentCode': '6135', 'promotion': 'S6', '_id': 'S6135'},
-{'name': 'IKIREZI MARTHE', 'combination': 'pcm', 'studentCode': '6136', 'promotion': 'S6', '_id': 'S6136'},
-{'name': 'IKIREZI NELLY', 'combination': 'pcm', 'studentCode': '6137', 'promotion': 'S6', '_id': 'S6137'},
-{'name': 'IRABARUTA CYISAGE YVAN DE VALTAN', 'combination': 'pcm', 'studentCode': '6138', 'promotion': 'S6', '_id': 'S6138'},
-{'name': 'IRADUKUNDA CHRISTIAN', 'combination': 'pcm', 'studentCode': '6139', 'promotion': 'S6', '_id': 'S6139'},
-{'name': 'IRADUKUNDA CLARISSE', 'combination': 'pcm', 'studentCode': '6140', 'promotion': 'S6', '_id': 'S6140'},
-{'name': 'IRADUKUNDA OLIVIER', 'combination': 'pcm', 'studentCode': '6141', 'promotion': 'S6', '_id': 'S6141'},
-{'name': 'IRADUKUNDA SYLIVER', 'combination': 'pcm', 'studentCode': '6142', 'promotion': 'S6', '_id': 'S6142'},
-{'name': 'IRADUKUNDA AMANI KEVIN', 'combination': 'pcm', 'studentCode': '6143', 'promotion': 'S6', '_id': 'S6143'},
-{'name': 'IRASUBIZA VALENTIN', 'combination': 'pcm', 'studentCode': '6144', 'promotion': 'S6', '_id': 'S6144'},
-{'name': 'ISHIMWE FABRICE', 'combination': 'pcm', 'studentCode': '6145', 'promotion': 'S6', '_id': 'S6145'},
-{'name': 'KAYIGIRE UMUHUZA HUGUETTE', 'combination': 'pcm', 'studentCode': '6146', 'promotion': 'S6', '_id': 'S6146'},
-{'name': 'KIREZI KEVINE MIRIELLE', 'combination': 'pcm', 'studentCode': '6147', 'promotion': 'S6', '_id': 'S6147'},
-{'name': 'KWIZERA BLAISE', 'combination': 'pcm', 'studentCode': '6148', 'promotion': 'S6', '_id': 'S6148'},
-{'name': 'KWIZERA EMMANUEL', 'combination': 'pcm', 'studentCode': '6149', 'promotion': 'S6', '_id': 'S6149'},
-{'name': 'MUGABE RODRIGUE', 'combination': 'pcm', 'studentCode': '6150', 'promotion': 'S6', '_id': 'S6150'},
-{'name': 'MUGISHA BONHEUR', 'combination': 'pcm', 'studentCode': '6151', 'promotion': 'S6', '_id': 'S6151'},
-{'name': 'MULINDA ALAIN ROBERTO', 'combination': 'pcm', 'studentCode': '6152', 'promotion': 'S6', '_id': 'S6152'},
-{'name': 'MURAGEMWIZA GANZA THEOTIME', 'combination': 'pcm', 'studentCode': '6153', 'promotion': 'S6', '_id': 'S6153'},
-{'name': 'NGABONZIZA OLIVIER', 'combination': 'pcm', 'studentCode': '6154', 'promotion': 'S6', '_id': 'S6154'},
-{'name': 'NGABOYAMAHINA MARIDADI', 'combination': 'pcm', 'studentCode': '6155', 'promotion': 'S6', '_id': 'S6155'},
-{'name': 'NGIRABAKUNZI THIERRY', 'combination': 'pcm', 'studentCode': '6156', 'promotion': 'S6', '_id': 'S6156'},
-{'name': 'NIYIGENA PATRICK', 'combination': 'pcm', 'studentCode': '6157', 'promotion': 'S6', '_id': 'S6157'},
-{'name': 'NIYONSENGA UWASE NANCY', 'combination': 'pcm', 'studentCode': '6158', 'promotion': 'S6', '_id': 'S6158'},
-{'name': 'NIYONSHUTI BRUCE', 'combination': 'pcm', 'studentCode': '6159', 'promotion': 'S6', '_id': 'S6159'},
-{'name': 'NSHUTI KENETH', 'combination': 'pcm', 'studentCode': '6160', 'promotion': 'S6', '_id': 'S6160'},
-{'name': 'RUKUNDO PARFAIT', 'combination': 'pcm', 'studentCode': '6161', 'promotion': 'S6', '_id': 'S6161'},
-{'name': 'TUYIZERE FRED REGIS', 'combination': 'pcm', 'studentCode': '6162', 'promotion': 'S6', '_id': 'S6162'},
-{'name': 'UFITEYEZU ANNICK BELLA', 'combination': 'pcm', 'studentCode': '6163', 'promotion': 'S6', '_id': 'S6163'},
-{'name': 'UFITIMANA DAVID', 'combination': 'pcm', 'studentCode': '6164', 'promotion': 'S6', '_id': 'S6164'},
-{'name': 'UWAMAHORO HOPE MILKER', 'combination': 'pcm', 'studentCode': '6165', 'promotion': 'S6', '_id': 'S6165'},
-{'name': 'UWAYEZU ELIE SERGE', 'combination': 'pcm', 'studentCode': '6166', 'promotion': 'S6', '_id': 'S6166'},
-{'name': 'UZABUMWANA REMY', 'combination': 'pcm', 'studentCode': '6167', 'promotion': 'S6', '_id': 'S6167'}
-];
+// Constants for modularity
+const PROMOTION_PREFIXES = {
+'S1': 1,
+'S2': 2,
+'S3': 3,
+'S4': 4,
+'S5': 5,
+'S6': 6
+};
+const CODE_PADDING = 3; // For 3-digit padding, e.g., 1001
+// Function to load JSON data
+const loadStudents = (filePath) => {
+try {
+const data = fs.readFileSync(filePath, 'utf-8');
+return JSON.parse(data);
+} catch (err) {
+logger.error('Failed to load student JSON', { error: err.message });
+throw err;
+}
+};
+// Function to generate unique student code
+const generateStudentCode = (promotion, index) => {
+const prefix = PROMOTION_PREFIXES[promotion];
+if (!prefix) {
+throw new Error(`Invalid promotion: ${promotion}`);
+}
+return `${prefix}${String(index + 1).padStart(CODE_PADDING, '0')}`;
+};
+// Function to prepare student object
+const prepareStudent = (studentData, index) => {
+const promotion = studentData.promotion;
+const groupField = ['S1', 'S2', 'S3'].includes(promotion) ? 'class' : 'combination';
+return {
+
+name: studentData.name,
+studentCode: generateStudentCode(promotion, index),
+promotion: promotion,
+[groupField]: studentData[groupField] // Dynamically add class or combination
+};
+};
+// Main seeding function
 const seed = async () => {
 try {
 await mongoose.connect(process.env.MONGO_URI);
 await Student.deleteMany({});
-await Student.insertMany(s6Students);
-logger.info('S6 real students seeded successfully');
+const allStudents = loadStudents('./student-list.json');
+// Group by promotion for counting and validation
+const grouped = allStudents.reduce((acc, s) => {
+acc[s.promotion] = (acc[s.promotion] || 0) + 1;
+return acc;
+}, {});
+logger.info('Student counts by promotion', grouped);
+const studentsToInsert = allStudents.map((s, i) => prepareStudent(s, i));
+await Student.insertMany(studentsToInsert);
+logger.info('All students seeded successfully');
 } catch (err) {
-logger.error('Failed to seed S6 students', { error: err.message });
+logger.error('Failed to seed students', { error: err.message });
 throw err;
 } finally {
 await mongoose.disconnect();

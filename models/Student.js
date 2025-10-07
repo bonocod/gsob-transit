@@ -8,12 +8,12 @@ const studentSchema = new mongoose.Schema({
   class: {
     type: String,
     required: function() { return ['S1', 'S2', 'S3'].includes(this.promotion); },
-    enum: ['A', 'B', 'C', 'D']
+    enum: ['A', 'B', 'C', 'D','E']
   },
   combination: {
     type: String,
     required: function() { return ['S4', 'S5', 'S6'].includes(this.promotion); },
-    enum: ['MS1A', 'MS1B', 'MS1C', 'MS2', 'anp', 'mcb', 'mpc', 'pcm', 'PCBA', 'PCBB', 'PCBa', 'PCBb', 'PCBc']
+    enum: ['MS1 A', 'MS1 B', 'MS1 C', 'MS2','MS1 D', 'ANP','ANP A','ANP B', 'MCB', 'MPC', 'PCM', 'PCB A', 'PCB B', 'PCB C']
   }
 });
 

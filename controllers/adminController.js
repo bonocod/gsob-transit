@@ -98,13 +98,13 @@ exports.manageClasses = (req, res) => {
   const promotion = req.params.promotion;
   let items;
   if (['S1', 'S2', 'S3'].includes(promotion)) {
-    items = ['A', 'B', 'C', 'D'];
+    items = ['A', 'B', 'C', 'D','E'];
   } else if (promotion === 'S4') {
-    items = ['MS1A', 'MS1B', 'MS1C', 'MS12'];
+    items = ['MS1 A', 'MS1 B', 'MS1 C', 'MS1 D','MS2','ANP A','ANP B'];
   } else if (promotion === 'S5') {
-    items = ['anp', 'mcb', 'mpc', 'pcm', 'PCBA', 'PCBB'];
+    items = ['ANP', 'MCB', 'MPC', 'PCM', 'PCB A', 'PCB B'];
   } else if (promotion === 'S6') {
-    items = ['anp', 'mcb', 'mpc', 'pcm', 'PCBa', 'PCBb', 'PCBc'];
+    items = ['ANP', 'MCB', 'MPC', 'PCM', 'PCB A', 'PCB B', 'PCB C'];
   } else {
     return res.status(400).render('error', { message: 'Invalid promotion' });
   }
@@ -123,7 +123,8 @@ exports.classStudents = async (req, res) => {
       query.combination = group;
     }
 
-    const students = await Student.find(query);
+    const students = await Student.find(query).sort({ name: 1 });
+
     const studentIds = students.map(s => s._id);
     const bookings = await Booking.find({ student: { $in: studentIds } });
 
@@ -242,7 +243,8 @@ exports.exportClassList = async (req, res) => {
       query.combination = group;
     }
 
-    const students = await Student.find(query);
+    const students = await Student.find(query).sort({ name: 1 });
+
     const studentIds = students.map(s => s._id);
     const bookings = await Booking.find({ student: { $in: studentIds } });
 
