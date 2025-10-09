@@ -89,11 +89,18 @@ app.get('/ticket-success', (req, res) => res.render('ticket-success'));
 app.get('/ticket-failure', (req, res) => res.render('ticket-failure', { message: req.query.message }));
 
 // Root route
-app.get('/', (req, res) => {
+app.get('/', async(req, res) => {
+  console.log(req.session)
   if (req.session.admin) {
     return res.render('admin', { currentAdmin: req.session.admin });
   }
-  res.render('index', { errorMessage: null });
+  const currentStudent = req.session.student || null;
+   let hasBooked = false;
+    if (currentStudent) {
+      const existingBooking = await Booking.findOne({ student: currentStudent._id, status: 'paid' });
+      hasBooked = !!existingBooking;
+    }
+  res.render('index', { errorMessage: null ,hasBooked});
 });
 
 // 404 Error

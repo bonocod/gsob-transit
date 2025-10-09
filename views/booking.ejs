@@ -1,80 +1,143 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Book Ticket - GSOB Transit</title>
+
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
-theme: {
-extend: {
-colors: { primary: '#2563EB', gold: '#FFD700' }
-}
-}
+  theme: {
+    extend: {
+      colors: { primary: '#2563EB', gold: '#FFD700', bgBlue: '#e0f2fe' },
+      animation: { float: 'float 6s ease-in-out infinite', shake: 'shake 0.6s ease-in-out' },
+      keyframes: {
+        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-15px)' } },
+        shake: { '0%,100%': { transform: 'translateX(0)' }, '25%': { transform: 'translateX(-5px)' }, '75%': { transform: 'translateX(5px)' } }
+      }
+    }
+  }
 }
 </script>
+
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
+<style>
+body { font-family:'Inter',sans-serif; background: linear-gradient(135deg,#cce4ff,#e0f2fe); overflow-x:hidden; }
+
+/* Floating shapes */
+.shape { position:absolute; border-radius:50%; opacity:0.2; animation:float 6s ease-in-out infinite; }
+.shape1{width:120px;height:120px;background:#2563EB;top:10%;left:10%;animation-delay:0s;}
+.shape2{width:150px;height:150px;background:#FFD700;top:70%;left:75%;animation-delay:2s;}
+.shape3{width:90px;height:90px;background:#1D4ED8;top:40%;left:50%;animation-delay:4s;}
+
+/* Card */
+.card { background:white; border-radius:2rem; padding:3rem; box-shadow:0 12px 40px rgba(0,0,0,0.12); transition:all 0.4s ease; position:relative; z-index:10;}
+.card:hover { transform:translateY(-8px) scale(1.02); box-shadow:0 18px 60px rgba(0,0,0,0.18); }
+
+/* Inputs */
+.input-group { position:relative; margin-bottom:1.8rem; }
+.input-group input, .input-group select { width:100%; padding:1.2rem 1rem 0.6rem 1rem; border-radius:1rem; border:1px solid #d1d5db; outline:none; background:#f9fafb; transition: all 0.3s ease; }
+.input-group input:focus, .input-group select:focus { border-color:#2563EB; box-shadow:0 0 0 3px rgba(37,99,235,0.15); }
+.input-group label { position:absolute; top:1.2rem; left:1rem; color:#6b7280; font-size:0.875rem; pointer-events:none; transition: all 0.3s ease; }
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label,
+.input-group select:focus + label,
+.input-group select:not([value=""]) + label {
+  top:-0.6rem; left:1rem; font-size:0.75rem; background:white; padding:0 0.25rem; color:#2563EB;
+}
+
+/* Button */
+button.primary-btn { width:100%; padding:1.2rem; background:linear-gradient(90deg,#2563EB,#1D4ED8); color:white; border-radius:1rem; font-size:1.125rem; font-weight:600; display:flex; justify-content:center; align-items:center; gap:0.6rem; border:none; cursor:pointer; transition:all 0.3s ease; }
+button.primary-btn:hover { background:linear-gradient(90deg,#1D4ED8,#2563EB); box-shadow:0 10px 30px rgba(37,99,235,0.25); }
+button.primary-btn:disabled { background:#93c5fd; cursor:not-allowed; }
+
+/* Fade Up Animation */
+@keyframes fadeUp { 0%{opacity:0;transform:translateY(20px);} 100%{opacity:1;transform:translateY(0);} }
+.fade-up { animation: fadeUp 0.6s ease forwards; }
+
+/* Fun confetti dots */
+.confetti { position:absolute; width:10px; height:10px; border-radius:50%; background:gold; opacity:0.8; pointer-events:none; animation:float 3s ease-in-out forwards; }
+</style>
 </head>
-<body class="bg-gray-50">
+
+<body>
+
+<!-- Floating shapes -->
+<div class="shape shape1"></div>
+<div class="shape shape2"></div>
+<div class="shape shape3"></div>
+
 <header class="bg-white shadow-md sticky top-0 z-50">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<div class="flex justify-between items-center h-16">
-<a href="/" class="text-2xl font-bold text-primary">GSOB Transit</a>
-<a href="/" class="text-gray-800 hover:text-primary transition-colors duration-200">Home</a>
-</div>
-</div>
+  <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+    <a href="/" class="text-2xl font-extrabold text-primary tracking-wide">GSOB Transit</a>
+    <a href="/" class="text-gray-800 hover:text-primary transition-colors font-semibold">Home</a>
+  </div>
 </header>
-<div class="container mx-auto mt-10 px-4 sm:px-6 lg:px-8">
-<h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6">Book Your Ticket</h2>
-<% if (errorMessage) { %>
-<div role="alert" class="bg-red-100 text-red-800 px-4 py-3 mb-6 rounded-lg border border-red-300">
-<%= errorMessage %>
-</div>
-<% } %>
-<% if (existingBooking) { %>
-<div class="bg-green-100 text-green-800 px-4 py-3 mb-6 rounded-lg border border-green-300">
-You have already bought a ticket. Details: <%= existingBooking.destination %> for <%= existingBooking.price %> RWF.
-</div>
-<% } else { %>
-<form action="/booking" method="POST" class="space-y-6 max-w-lg mx-auto" aria-label="Booking Form">
-<input type="hidden" name="_csrf" value="<%= csrfToken %>">
-<div>
-<label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-<input type="text" id="name" name="name" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= currentStudent.name %>" readonly aria-readonly="true">
-</div>
-<div>
-<label for="promotion" class="block text-sm font-medium text-gray-700">Promotion</label>
-<input type="text" id="promotion" name="promotion" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= currentStudent.promotion %>" readonly aria-readonly="true">
-</div>
-<% if (['S1', 'S2', 'S3'].includes(currentStudent.promotion)) { %>
-<div>
-<label for="class" class="block text-sm font-medium text-gray-700">Class</label>
-<input type="text" id="class" name="class" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= currentStudent.class %>" readonly aria-readonly="true">
-</div>
-<% } else { %>
-<div>
-<label for="combination" class="block text-sm font-medium text-gray-700">Combination/Stream</label>
-<input type="text" id="combination" name="combination" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 bg-gray-100 text-base" value="<%= currentStudent.combination %>" readonly aria-readonly="true">
-</div>
-<% } %>
-<div>
-<label for="phoneNumber" class="block text-sm font-medium text-gray-700">MTN Mobile Number</label>
-<input type="tel" id="phoneNumber" name="phoneNumber" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base"
-required aria-required="true" placeholder="e.g., 25078xxxxxxx">
-</div>
-<div>
-<label for="destination" class="block text-sm font-medium text-gray-700">Destination</label>
-<select id="destination" name="destination" class="mt-1 block w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary text-base"
-required aria-required="true">
-<option value="">Select Destination</option>
-<% destinations.forEach(dest => { %>
-<option value="<%= dest._id %>"><%= dest.name %> - <%= dest.price %> RWF</option>
-<% }) %>
-</select>
-</div>
-<button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold">Pay with MTN MoMo</button>
-</form>
-<% } %>
-</div>
+
+<main class="flex justify-center items-center min-h-screen px-4 py-12 relative z-10">
+  <div class="card max-w-lg w-full fade-up">
+
+    <h2 class="text-4xl font-bold text-gray-800 mb-8 text-center">🎟️ Book Your Ticket</h2>
+
+    <% if (errorMessage) { %>
+      <div class="bg-red-100 text-red-800 px-4 py-3 mb-6 rounded-xl border border-red-300 flex items-center space-x-3 animate-fadeUp">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span><%= errorMessage %></span>
+      </div>
+    <% } %>
+
+    <form id="bookingForm" action="/booking" method="POST" class="space-y-6">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="input-group">
+        <input type="tel" name="phoneNumber" id="phoneNumber" placeholder=" " required>
+        <label for="phoneNumber">MTN Mobile Number</label>
+      </div>
+
+      <div class="input-group">
+        <select name="destination" id="destination" required value="">
+          <option value="" disabled selected></option>
+          <% destinations.forEach(dest => { %>
+            <option value="<%= dest._id %>"><%= dest.name %> - <%= dest.price %> RWF</option>
+          <% }) %>
+        </select>
+        <label for="destination">Select Destination</label>
+      </div>
+
+      <button type="submit" id="payBtn" class="primary-btn">
+        <span id="payText">Pay with MTN MoMo</span>
+        <i id="paySpinner" class="fas fa-spinner fa-spin hidden"></i>
+      </button>
+    </form>
+
+  </div>
+</main>
+
+<script>
+document.getElementById('bookingForm')?.addEventListener('submit', function(e){
+  const btn = document.getElementById('payBtn');
+  const spinner = document.getElementById('paySpinner');
+  const text = document.getElementById('payText');
+  btn.disabled = true;
+  spinner.classList.remove('hidden');
+  text.textContent = 'Processing payment...';
+
+  // small fun confetti animation
+  for(let i=0;i<15;i++){
+    const dot = document.createElement('div');
+    dot.className='confetti';
+    dot.style.left=Math.random()*window.innerWidth+'px';
+    dot.style.top='50%';
+    dot.style.background=['#FFD700','#2563EB','#1D4ED8'][Math.floor(Math.random()*3)];
+    document.body.appendChild(dot);
+    setTimeout(()=>dot.remove(),2000+Math.random()*1000);
+  }
+});
+</script>
+
 </body>
-</html>
+</html> 

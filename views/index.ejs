@@ -1,161 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GSOB Transit - Home</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { primary: "#2563EB", gold: "#FFD700" },
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSOB Transit - Home</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: { primary: '#2563EB', gold: '#FFD700', bgBlue: '#e0f2fe' },
+      animation: { float: 'float 6s ease-in-out infinite', fadeUp: 'fadeUp 0.6s ease forwards' },
+      keyframes: {
+        float: {
+          '0%,100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-15px)' }
         },
-      },
-    };
-  </script>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-  />
+        fadeUp: {
+          '0%': { opacity: 0, transform: 'translateY(20px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' }
+        }
+      }
+    }
+  }
+}
+</script>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
+<style>
+body { font-family:'Inter',sans-serif; background: linear-gradient(135deg,#cce4ff,#e0f2fe); overflow-x:hidden; }
+
+/* Floating shapes */
+.shape { position:absolute; border-radius:50%; opacity:0.2; animation:float 6s ease-in-out infinite; }
+.shape1{width:120px;height:120px;background:#2563EB;top:10%;left:10%;animation-delay:0s;}
+.shape2{width:150px;height:150px;background:#FFD700;top:70%;left:75%;animation-delay:2s;}
+.shape3{width:90px;height:90px;background:#1D4ED8;top:40%;left:50%;animation-delay:4s;}
+
+/* Card */
+.card { background:white; border-radius:2rem; padding:3rem; box-shadow:0 12px 40px rgba(0,0,0,0.12); transition:all 0.4s ease; position:relative; z-index:10;}
+.card:hover { transform:translateY(-8px) scale(1.02); box-shadow:0 18px 60px rgba(0,0,0,0.18); }
+
+/* Inputs */
+.input-group { position:relative; margin-bottom:1.8rem; }
+.input-group input { width:100%; padding:1.2rem 1rem 0.6rem 1rem; border-radius:1rem; border:1px solid #d1d5db; outline:none; background:#f9fafb; transition: all 0.3s ease; }
+.input-group input:focus { border-color:#2563EB; box-shadow:0 0 0 3px rgba(37,99,235,0.15); }
+.input-group label { position:absolute; top:1.2rem; left:1rem; color:#6b7280; font-size:0.875rem; pointer-events:none; transition: all 0.3s ease; }
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label { top:-0.6rem; left:1rem; font-size:0.75rem; background:white; padding:0 0.25rem; color:#2563EB; }
+
+/* Buttons */
+button.primary-btn { width:100%; padding:1.2rem; background:linear-gradient(90deg,#2563EB,#1D4ED8); color:white; border-radius:1rem; font-size:1.125rem; font-weight:600; display:flex; justify-content:center; align-items:center; gap:0.6rem; border:none; cursor:pointer; transition:all 0.3s ease; }
+button.primary-btn:hover { background:linear-gradient(90deg,#1D4ED8,#2563EB); box-shadow:0 10px 30px rgba(37,99,235,0.25); }
+button.primary-btn:disabled { background:#93c5fd; cursor:not-allowed; }
+
+/* Animations */
+@keyframes fadeUp { 0%{opacity:0;transform:translateY(20px);} 100%{opacity:1;transform:translateY(0);} }
+.fade-up { animation: fadeUp 0.6s ease forwards; }
+
+/* Confetti */
+.confetti { position:absolute; width:10px; height:10px; border-radius:50%; background:gold; opacity:0.8; pointer-events:none; animation:float 3s ease-in-out forwards; }
+</style>
 </head>
-<body class="bg-gray-50 font-sans">
-  <header class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <a href="/" class="text-2xl font-bold text-primary">GSOB Transit</a>
-        <nav aria-label="Main navigation" class="flex items-center">
-          <% if (currentStudent) { %>
-            <button
-              class="sm:hidden text-gray-800 focus:outline-none"
-              onclick="document.getElementById('mobile-menu').classList.toggle('hidden')"
-            >
-              <i class="fas fa-bars text-2xl"></i>
-            </button>
-            <ul
-              id="mobile-menu"
-              class="hidden sm:flex sm:items-center sm:space-x-4 flex-col sm:flex-row absolute sm:static top-16 left-0 w-full sm:w-auto bg-white sm:bg-transparent shadow-md sm:shadow-none p-4 sm:p-0 space-y-4 sm:space-y-0"
-            >
-              <li class="text-gray-800">
-                <span>Welcome, <%= currentStudent.name %></span>
-              </li>
-              <li>
-                <a
-                  href="/booking"
-                  class="text-gray-800 hover:text-primary transition-colors duration-200"
-                >Book Ticket</a>
-              </li>
-              <li>
-                <a
-                  href="/auth/logout"
-                  class="text-gray-800 hover:text-primary transition-colors duration-200"
-                >Logout</a>
-              </li>
-            </ul>
-          <% } %>
-        </nav>
-      </div>
-    </div>
-  </header>
 
-  <main
-    class="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-b from-gray-50 to-gray-100"
-  >
-    <div class="text-center max-w-3xl mx-auto">
-      <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-gray-900">
-        GSOB <span class="text-primary">TRANSIT</span>
-      </h1>
-      <p class="text-lg sm:text-xl text-gray-700 mb-8">
-        Your Safe Learning Journey Starts Here
-      </p>
+<body>
+<!-- Floating shapes -->
+<div class="shape shape1"></div>
+<div class="shape shape2"></div>
+<div class="shape shape3"></div>
+
+<!-- Header -->
+<header class="bg-white shadow-md sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+    <a href="/" class="text-2xl font-extrabold text-primary tracking-wide">GSOB Transit</a>
+    <nav class="flex items-center space-x-6">
       <% if (currentStudent) { %>
-        <p class="text-base sm:text-lg text-gray-600 mb-6">
-          Book your ticket to your next destination with ease.
-        </p>
-        <a
-          href="/booking"
-          class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold"
-        >
-          Book Now
-        </a>
+        <span class="text-gray-800 font-semibold">Welcome, <%= currentStudent.name %></span>
+        <a href="/booking" class="text-gray-800 hover:text-primary font-semibold transition-colors">Book Ticket</a>
+        <a href="/auth/logout" class="text-gray-800 hover:text-primary font-semibold transition-colors">Logout</a>
       <% } else { %>
-        <p class="text-base sm:text-lg text-gray-600 mb-6">
-          Enter your student code to get started.
-        </p>
-        <div class="max-w-md mx-auto bg-white p-6 sm:p-8 rounded-lg shadow-lg">
-          <h2 class="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-6">Enter Your Code</h2>
-          <% if (errorMessage) { %>
-            <div role="alert" class="bg-red-100 text-red-800 px-4 py-3 mb-6 rounded-lg border border-red-300">
-              <%= errorMessage %>
-            </div>
-          <% } %>
-          <form action="/student/verify-code" method="POST" class="space-y-6" aria-label="Code Entry Form">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <div>
-              <label for="code" class="block text-sm font-medium text-gray-700">Student Code</label>
-              <input
-                type="text"
-                name="code"
-                id="code"
-                required
-                
-                
-                class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-base"
-                aria-required="true"
-                placeholder="e.g., 1234"
-              >
-            </div>
-            <button
-              type="submit"
-              class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg font-semibold"
-            >
-              Submit
-            </button>
-          </form>
-        </div>
+        <a href="/" class="text-gray-800 hover:text-primary font-semibold transition-colors">Home</a>
       <% } %>
-    </div>
-  </main>
+    </nav>
+  </div>
+</header>
 
-  <footer class="bg-gray-800 text-white py-12">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        <div>
-          <h3 class="text-xl font-bold mb-4">About GSOB Transit</h3>
-          <p class="text-gray-300 text-sm">
-            GSOB Transit is your gateway to seamless travel for learning
-            experiences. Book your ticket and connect with your educational
-            journey.
-          </p>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold mb-4">Connect</h3>
-          <div class="flex space-x-4">
-            <a
-              href="#"
-              class="text-gray-300 hover:text-primary transition-colors duration-200"
-            ><i class="fab fa-twitter text-2xl"></i></a>
-            <a
-              href="#"
-              class="text-gray-300 hover:text-primary transition-colors duration-200"
-            ><i class="fab fa-instagram text-2xl"></i></a>
-            <a
-              href="mailto:info@gsob.com"
-              class="text-gray-300 hover:text-primary transition-colors duration-200"
-            ><i class="fas fa-envelope text-2xl"></i></a>
-            <a
-              href="#"
-              class="text-gray-300 hover:text-primary transition-colors duration-200"
-            ><i class="fas fa-users text-2xl"></i></a>
+<!-- Main -->
+<main class="flex flex-col justify-center items-center min-h-screen px-4 py-12 relative z-10">
+  <div class="card max-w-2xl w-full text-center fade-up">
+    <h1 class="text-5xl font-extrabold mb-4 text-gray-800">GSOB <span class="text-primary">TRANSIT</span></h1>
+    <p class="text-lg text-gray-700 mb-6">Your Safe Learning Journey Starts Here</p>
+
+    <% if (currentStudent) { %>
+      <p class="text-gray-600 mb-8 text-base sm:text-lg">Book your ticket to your next destination with ease.</p>
+      <a href="/booking" class="inline-block bg-primary text-white px-8 py-3 rounded-xl text-lg font-semibold hover:bg-blue-700 transition-colors">
+        🎟️ Book Now
+      </a>
+    <% } else { %>
+      <form id="studentCodeForm" action="/student/verify-code" method="POST" class="max-w-md mx-auto space-y-6">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <% if (errorMessage) { %>
+          <div class="bg-red-100 text-red-800 px-4 py-3 mb-4 rounded-xl border border-red-300 flex items-center space-x-2">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span><%= errorMessage %></span>
           </div>
+        <% } %>
+
+        <div class="input-group">
+          <input type="text" name="code" id="code" placeholder=" " required>
+          <label for="code">Student Code</label>
         </div>
-      </div>
-      <div class="mt-8 text-center">
-        <p class="text-gray-300 text-sm">
-          Developed by the GSOB Team • © 2025 GSOB Transit. All rights reserved.
-        </p>
-      </div>
+
+        <button type="submit" id="submitBtn" class="primary-btn">
+          <span id="btnText">Submit</span>
+          <i id="btnSpinner" class="fas fa-spinner fa-spin hidden"></i>
+        </button>
+      </form>
+    <% } %>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h3 class="text-xl font-bold mb-2">About GSOB Transit</h3>
+    <p class="text-gray-300 text-sm max-w-2xl mx-auto mb-6">
+      GSOB Transit is your gateway to seamless travel for learning experiences. Book your ticket and connect with your educational journey.
+    </p>
+    <div class="flex justify-center space-x-6 mb-4">
+      <a href="#" class="text-gray-300 hover:text-primary transition"><i class="fab fa-twitter text-2xl"></i></a>
+      <a href="#" class="text-gray-300 hover:text-primary transition"><i class="fab fa-instagram text-2xl"></i></a>
+      <a href="mailto:info@gsob.com" class="text-gray-300 hover:text-primary transition"><i class="fas fa-envelope text-2xl"></i></a>
+      <a href="#" class="text-gray-300 hover:text-primary transition"><i class="fas fa-users text-2xl"></i></a>
     </div>
-  </footer>
+    <p class="text-gray-400 text-sm mt-4">Developed by the GSOB Team • © 2025 GSOB Transit. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script>
+document.getElementById('studentCodeForm')?.addEventListener('submit', function(e) {
+  const btn = document.getElementById('submitBtn');
+  const spinner = document.getElementById('btnSpinner');
+  const text = document.getElementById('btnText');
+  btn.disabled = true;
+  spinner.classList.remove('hidden');
+  text.textContent = 'Processing...';
+
+});
+ 
+</script>
 </body>
 </html>
